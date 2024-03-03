@@ -33,7 +33,7 @@ init python:
         global questions
         global options #already randomized and correct answer provided
         global answers   #letters
-        global answers_word #kasi bobo ka
+        global answers_word
 
         with open(f"D:/renpy-8.1.3-sdk/kodigo/game/python/quizzes/OS Fundamentals.json", 'r') as file:
             quiz = json.load(file)
@@ -476,7 +476,7 @@ label wrong:
     $ answer = answers_word[question_num]
 
     "Your answer is wrong."
-    "The correct answer is [letter]. [answer]." #tangina mo dorinil
+    "The correct answer is [letter]. [answer]."
 
     hide mc
     hide halfblack
