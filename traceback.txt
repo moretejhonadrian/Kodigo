@@ -1,0 +1,36 @@
+﻿I'm sorry, but an uncaught exception occurred.
+
+While running game code:
+  File "game/quiz.rpy", line 257, in script
+    $ hide_s("question_dull")
+  File "game/quiz.rpy", line 257, in <module>
+    $ hide_s("question_dull")
+  File "game/7dots.rpy", line 505, in hide_s
+    renpy.hide_screen(screen, layer="screen", **kwarg)
+Exception: Unknown layer 'screen'.
+
+-- Full Traceback ------------------------------------------------------------
+
+Full traceback:
+  File "game/quiz.rpy", line 257, in script
+    $ hide_s("question_dull")
+  File "D:\renpy-8.1.3-sdk\renpy\ast.py", line 1138, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "D:\renpy-8.1.3-sdk\renpy\python.py", line 1122, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+  File "game/quiz.rpy", line 257, in <module>
+    $ hide_s("question_dull")
+  File "game/7dots.rpy", line 505, in hide_s
+    renpy.hide_screen(screen, layer="screen", **kwarg)
+  File "D:\renpy-8.1.3-sdk\renpy\display\screen.py", line 1341, in hide_screen
+    screen = get_screen(tag, layer)
+  File "D:\renpy-8.1.3-sdk\renpy\display\screen.py", line 1120, in get_screen
+    sd = sl.get_displayable_by_tag(layer, tag)
+  File "D:\renpy-8.1.3-sdk\renpy\display\core.py", line 1652, in get_displayable_by_tag
+    raise Exception("Unknown layer %r." % layer)
+Exception: Unknown layer 'screen'.
+
+Windows-10-10.0.22621 AMD64
+Ren'Py 8.1.3.23091805
+Kodigo 1.0
+Sun Mar  3 12:11:26 2024

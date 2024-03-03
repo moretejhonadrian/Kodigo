@@ -1,0 +1,80 @@
+Computers in
+Different Fields
+
+Business
+o Accounting
+ financial accounts
+ inventory daily
+o E-commerce websites
+ Shoppe
+ Amazon
+ Lazada
+o Data mining
+ the extraction of huge data for useful information for the benefit of the
+company
+ Data warehousing and data analytics
+
+Education
+o Online classes
+ Distance learning
+ Free lectures
+o Aid in learning
+ more fun and interactive
+ high-definition audios and visuals
+ creating interest in learning
+o Research
+
+Government
+o Military
+ controlling smart weapons
+ Communication
+ guiding sensors in remote areas
+o Meteorological department
+ weather forecasting
+o Data handling
+ national security
+ personal details of the citizens
+ budget
+
+Banking
+o E-banking
+ withdrawing and depositing money
+ transferring funds online
+o Data maintenance
+ high-security software that helps in maintaining private data
+security
+
+Arts and Entertainment
+o Video editing and graphics
+ animated movies
+ inventory daily
+o Designing
+ Canva
+
+Medical Field
+o maintain a database of patients’ history
+o robotic surgical devices
+o live monitoring of patients
+
+Industry
+o creating virtual sample products
+o Online marketing
+o managing inventory
+o Data analytics
+
+Science and Engineering
+o Research and Development
+o Scientists use computers to plot and analyze data
+o Robotics
+o Artificial intelligence
+
+Home
+o watching movies and listening to music
+o work from home
+o school assignments
+
+References
+https://artoftesting.com/applications-of-computers
+https://khyberacademy.com/importance-uses-of-computer-in-various-fields/
+
+

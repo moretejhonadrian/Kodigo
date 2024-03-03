@@ -1,0 +1,115 @@
+Classification of
+Computers
+Computer Classification
+These days, a variety of computer technology classes
+are offered.
+Each computer may have a different set of methods
+or procedures, size, capacity, attributes, and ways of
+handling data.
+Computer Classification
+Computer Classification
+By Size and Capacity, [Supercomputer, Mainframe, Mini, and Micro Computer].
+By Purpose [General and Special Purpose].
+By Type [Analog, Digital, and Hybrid Computer].
+Classification According to Size
+Supercomputers
+Supercomputers are the computers that process data and perform the best overall. These
+computers are used for investigational and research work. Supercomputers are incredibly
+expensive and big. It only fits in huge, climate-controlled areas.
+Supercomputers are employed in a variety of projects, including nuclear weapon testing, seismic
+research, and space exploration.
+Features:
+They make use of AI (Artificial intelligence)
+They are the fastest and strongest, very costly, enormous in size
+Classification According to Size
+Mainframe computers
+Less effective than supercomputers. Mainframe computers are often used in large enterprises
+and governmental institutions to manage daily operations.
+They are able to store and process a large amount of data
+Features:
+- have enormous amounts of memory.
+- capable of running several different operating systems.
+-have a significant number of CPUs with powerful processing
+Speeds
+- Tightly Coupled Clustering Technology is employed.
+ Classification According to Size
+Minicomputers
+Small enterprises and industries both make use of minicomputers. Sometimes known as
+"Midrange Computers," frequently have many users, exactly like mainframe computers.
+Compared to mainframe computers, they are a little slower
+Features:
+-smaller than mainframes or supercomputers in terms of size.
+-it is less costly
+-may be utilized by several users simultaneously.
+- utilized by small businesses.
+Classification According to Size
+Microcomputers
+Often known as a personal computer (PC), is a form of computer that functions on a scale that is
+smaller than that of traditional computers. They are the most affordable.
+Features:
+-extensively employed for personal usage.
+-smaller and comparably less expensive
+-has a limited computational capacity.
+-quite simple to use
+Classification According to Purpose
+General Purpose
+Can do various everyday tasks such as writing a word processing letter, Document preparation,
+recording, financial analysis, Printing documents, creating databases, and calculations with
+accuracy and consistency
+It has versatility and useful for serving people’s basic needs at
+home or in the workplace in the environment.
+
+
+Examples:
+Desktops, laptops, smartphones, and tablets
+Classification According to Purpose
+Special Purpose
+These computers are designed to perform a particular or specialized task.
+The size, storage capacity, and cost of such computers mainly depend on the nature and size of
+the work
+It needs specific and input and devices as well as a compatible motherboard with the
+processor to conduct work efficiently.
+
+
+Examples:
+Automatic teller machines (ATM), Washing machines, Surveillance equipment, Weather-
+forecasting simulators, Traffic-control computers, Military planes controlling computers.
+Classification According to Hardware
+Design and Data Handling (By Type)
+Analog Computer
+performs tasks using continuous data (the physical amount that changes continuously).
+used primarily to measure physical units like the voltage, pressure, electric current, temperature,
+and convert them into digits.
+used in the fields of technology, science, research, engineering,
+
+
+Examples:
+A simple clock, the vehicle’s speedometer, Voltmeter
+Classification According to Hardware
+Design and Data Handling (By Type)
+Digital Computer
+represents the digital computer’s letters, numerical values, or any other special symbols
+It can perform arithmetic operations such as addition, occurrence, subtraction, multiplication, or
+division and all types of logical(mathematical) operations
+
+
+Examples:
+desktop or Laptop at our home is one the common
+and best example of a digital computer.
+Classification According to Hardware
+Design and Data Handling (By Type)
+Hybrid Computer
+Computers that combine digital and analog components
+It combines the best features of both types, having the speed of an analog computer with the
+memory and precision of a digital computer. Typically used in specific applications where both
+forms of data need to be processed.
+Example:
+a gas pump contains a processor that converts measurements of
+fuel flow into information about quality and cost
+References
+https://digitalworld839.com/classification-of-
+computers/
+https://www.vedantu.com/computer-
+science/classification-of-computer-based-on-size-and-
+capacity
+
