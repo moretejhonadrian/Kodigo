@@ -344,6 +344,7 @@ label quiz_proper:
         image "images/Minigames Menu/timer/[current_time].png" xalign 0.85 yalign 0.85
 
     screen question():
+        $ show_s("question_dull")
         imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("countdown"), Show("paused_menu")]: #action pending
             xalign 0.86
             yalign 0.04
@@ -417,7 +418,6 @@ style mytext_button_text:
     size 23
 
 screen paused_menu():
-    $ show_s("question_dull")
     $ paused_time = int(time)
     image "images/Minigames Menu/timer/[paused_time].png" xalign 0.85 yalign 0.85
     add "halfblack"
