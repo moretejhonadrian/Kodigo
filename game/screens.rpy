@@ -286,84 +286,116 @@ style quick_button_text:
 ## to other menus, and to start the game.
 
 screen navigation():
+    if renpy.get_screen("main_menu"):
+        vbox:
+            style_prefix "navigation"
 
-    vbox:
-        style_prefix "navigation"
-
-        if renpy.get_screen("main_menu"):
             xalign 0.5
             yalign 0.8
-        else:
+
+            spacing gui.navigation_spacing
+
+            if main_menu:
+
+                imagebutton:
+                    ysize 55
+                    auto "Button/start_%s.png"
+                    action Start()
+
+            else:
+
+                textbutton _("History") action ShowMenu("history")
+
+                textbutton _("Save") action ShowMenu("save")
+
+            imagebutton:
+                ysize 55
+                auto "Button/load_%s.png"
+                action ShowMenu("load")
+
+            imagebutton:
+                ysize 55
+                auto "Button/option_%s.png"
+                action ShowMenu("preferences")
+
+            if _in_replay:
+
+                textbutton _("End Replay") action EndReplay(confirm=True)
+
+            elif not main_menu:
+
+                textbutton _("Main Menu") action MainMenu()
+
+            imagebutton:
+                ysize 55
+                auto "Button/minigame_%s.png"
+                action ShowMenu("minigame")
+
+            imagebutton:
+                ysize 55
+                auto "Button/about_%s.png"
+                action ShowMenu("about")
+
+            if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
+
+                ## Help isn't necessary or relevant to mobile devices.
+                imagebutton:
+                    ysize 55
+                    auto "Button/help_%s.png"
+                    action ShowMenu("help")
+
+            if renpy.variant("pc"):
+
+                ## The quit button is banned on iOS and unnecessary on Android and
+                ## Web.
+                imagebutton:
+                    ysize 55
+                    auto "Button/quit_%s.png"
+                    action Quit(confirm=not main_menu)
+    else:
+        vbox:
+            style_prefix "navigation"
+
             xoffset 60
             yalign 0.5
 
+            spacing gui.navigation_spacing
 
-        spacing gui.navigation_spacing
+            if main_menu:
 
-        if main_menu:
+                textbutton _("Start") action Start()
 
-            #textbutton _("Start") action Start()
-            imagebutton:
-                ysize 50
-                auto "Button/start_%s.png"
-                action Start()
+            else:
 
-        else:
+                textbutton _("History") action ShowMenu("history")
 
-            textbutton _("History") action ShowMenu("history")
+                textbutton _("Save") action ShowMenu("save")
 
-            textbutton _("Save") action ShowMenu("save")
+            textbutton _("Load") action ShowMenu("load")
 
-        #textbutton _("Load") action ShowMenu("load")
-        imagebutton:
-            ysize 50
-            auto "Button/load_%s.png"
-            action ShowMenu("load")
+            textbutton _("Options") action ShowMenu("preferences")
+            if _in_replay:
 
-        #textbutton _("Options") action ShowMenu("preferences")
-        imagebutton:
-            ysize 50
-            auto "Button/option_%s.png"
-            action ShowMenu("preferences")
+                textbutton _("End Replay") action EndReplay(confirm=True)
 
-        if _in_replay:
+            elif not main_menu:
 
-            textbutton _("End Replay") action EndReplay(confirm=True)
+                textbutton _("Main Menu") action MainMenu()
 
-        elif not main_menu:
+            textbutton _("Mini Games") action ShowMenu("minigame")
 
-            textbutton _("Main Menu") action MainMenu()
+            textbutton _("About") action ShowMenu("about")
 
-        #textbutton _("Mini Games") action ShowMenu("minigame")
-        imagebutton:
-            ysize 50
-            auto "Button/minigame_%s.png"
-            action ShowMenu("minigame")
+            if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
 
-        #textbutton _("About") action ShowMenu("about")
-        imagebutton:
-            ysize 50
-            auto "Button/about_%s.png"
-            action ShowMenu("about")
+                ## Help isn't necessary or relevant to mobile devices.
+                textbutton _("Help") action ShowMenu("help")
 
-        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
+            if renpy.variant("pc"):
 
-            ## Help isn't necessary or relevant to mobile devices.
-            #textbutton _("Help") action ShowMenu("help")
-            imagebutton:
-                ysize 50
-                auto "Button/help_%s.png"
-                action ShowMenu("help")
-
-        if renpy.variant("pc"):
-
-            ## The quit button is banned on iOS and unnecessary on Android and
-            ## Web.
-            #textbutton _("Quit") action Quit(confirm=not main_menu)
-            imagebutton:
-                ysize 65
-                auto "Button/quit_%s.png"
-                action Quit(confirm=not main_menu)
+                ## The quit button is banned on iOS and unnecessary on Android and
+                ## Web.
+                textbutton _("Quit") action Quit(confirm=not main_menu)
 
 
 style navigation_button is gui_button

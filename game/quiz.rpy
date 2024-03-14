@@ -33,7 +33,7 @@ init python:
         global questions
         global options #already randomized and correct answer provided
         global answers   #letters
-        global answers_word #kasi bobo ka
+        global answers_word
 
         with open(f"D:/renpy-8.1.3-sdk/kodigo/game/python/quizzes/OS Fundamentals.json", 'r') as file:
             quiz = json.load(file)
@@ -140,7 +140,7 @@ screen program_quiz_protocol():
     imagebutton auto "images/Button/standard_quiz_%s.png" action ShowMenu("standard_quizzes"):
         yalign 0.55
         xalign 0.5
-    imagebutton auto "images/Button/custom_quiz_%s.png" action Jump("custom_quizzes"):
+    imagebutton auto "images/Button/custom_quiz_%s.png": #tbd #action Jump("custom_quizzes"):
         yalign 0.7
         xalign 0.5
 
@@ -190,26 +190,6 @@ screen standard_quizzes():
                 yoffset 20
             imagebutton auto "images/Button/notes_%s.png" action [ShowMenu("display_notes"), Function(set_quiz, "OS Fundamentals"), Function(set_quiz_type, "standard")]:
                 yoffset 10
-
-label custom_quizzes:
-    show bg quiz main with dissolve
-    show mc happy_uniform at left
-
-    screen custom():
-        imagebutton auto "images/Minigames Menu/exit_%s.png":
-            xalign 0.86
-            yalign 0.04
-
-    show screen custom
-
-    "Coming soon."
-
-    hide bg
-    hide mc
-    hide screen custom
-    call screen program_quiz_protocol with dissolve
-
-#screen display_quiz():
 
 screen display_notes():
     add "bg quiz main"
@@ -344,7 +324,8 @@ label quiz_proper:
         image "images/Minigames Menu/timer/[current_time].png" xalign 0.85 yalign 0.85
 
     screen question():
-        imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("countdown"), Show("paused_menu")]: #action pending
+        $ show_s("question_dull")
+        imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("question"), Hide("countdown"), Show("paused_menu")]: #action pending
             xalign 0.86
             yalign 0.04
 
@@ -417,7 +398,6 @@ style mytext_button_text:
     size 23
 
 screen paused_menu():
-    $ show_s("question_dull")
     $ paused_time = int(time)
     image "images/Minigames Menu/timer/[paused_time].png" xalign 0.85 yalign 0.85
     add "halfblack"
@@ -476,7 +456,7 @@ label wrong:
     $ answer = answers_word[question_num]
 
     "Your answer is wrong."
-    "The correct answer is [letter]. [answer]." #tangina mo dorinil
+    "The correct answer is [letter]. [answer]."
 
     hide mc
     hide halfblack
@@ -500,7 +480,6 @@ label results:
     call screen standard_quizzes
 
 screen question_dull:
-
     imagebutton auto "images/Button/pause_quiz_%s.png": #action pending
         xalign 0.86
         yalign 0.04

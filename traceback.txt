@@ -1,36 +1,73 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/quiz.rpy", line 257, in script
-    $ hide_s("question_dull")
-  File "game/quiz.rpy", line 257, in <module>
-    $ hide_s("question_dull")
-  File "game/7dots.rpy", line 505, in hide_s
-    renpy.hide_screen(screen, layer="screen", **kwarg)
-Exception: Unknown layer 'screen'.
+  File "game/quiz.rpy", line 210, in script
+    call screen program_quiz_protocol with dissolve
+  File "renpy/common/000window.rpy", line 111, in _window_auto_callback
+    _window_hide(auto=True)
+  File "renpy/common/000window.rpy", line 101, in _window_hide
+    renpy.with_statement(trans)
+  File "game/quiz.rpy", line 502, in execute
+    screen question_dull:
+  File "game/quiz.rpy", line 502, in execute
+    screen question_dull:
+  File "game/quiz.rpy", line 507, in execute
+    frame:
+  File "game/quiz.rpy", line 516, in execute
+    text "[number]. " + questions[question_num]:
+  File "game/quiz.rpy", line 516, in <module>
+    text "[number]. " + questions[question_num]:
+NameError: name 'questions' is not defined
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/quiz.rpy", line 257, in script
-    $ hide_s("question_dull")
-  File "D:\renpy-8.1.3-sdk\renpy\ast.py", line 1138, in execute
-    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
-  File "D:\renpy-8.1.3-sdk\renpy\python.py", line 1122, in py_exec_bytecode
-    exec(bytecode, globals, locals)
-  File "game/quiz.rpy", line 257, in <module>
-    $ hide_s("question_dull")
-  File "game/7dots.rpy", line 505, in hide_s
-    renpy.hide_screen(screen, layer="screen", **kwarg)
-  File "D:\renpy-8.1.3-sdk\renpy\display\screen.py", line 1341, in hide_screen
-    screen = get_screen(tag, layer)
-  File "D:\renpy-8.1.3-sdk\renpy\display\screen.py", line 1120, in get_screen
-    sd = sl.get_displayable_by_tag(layer, tag)
-  File "D:\renpy-8.1.3-sdk\renpy\display\core.py", line 1652, in get_displayable_by_tag
-    raise Exception("Unknown layer %r." % layer)
-Exception: Unknown layer 'screen'.
+  File "game/quiz.rpy", line 210, in script
+    call screen program_quiz_protocol with dissolve
+  File "D:\renpy-8.1.3-sdk\renpy\ast.py", line 2257, in execute
+    statement_name(self.get_name())
+  File "D:\renpy-8.1.3-sdk\renpy\ast.py", line 47, in statement_name
+    i(name)
+  File "renpy/common/000window.rpy", line 111, in _window_auto_callback
+    _window_hide(auto=True)
+  File "renpy/common/000window.rpy", line 101, in _window_hide
+    renpy.with_statement(trans)
+  File "D:\renpy-8.1.3-sdk\renpy\exports.py", line 1758, in with_statement
+    return renpy.game.interface.do_with(trans, paired, clear=clear)
+  File "D:\renpy-8.1.3-sdk\renpy\display\core.py", line 2978, in do_with
+    return self.interact(trans_pause=True,
+  File "D:\renpy-8.1.3-sdk\renpy\display\core.py", line 3582, in interact
+    repeat, rv = self.interact_core(preloads=preloads, trans_pause=trans_pause, pause=pause, pause_start=pause_start, pause_modal=pause_modal, **kwargs) # type: ignore
+  File "D:\renpy-8.1.3-sdk\renpy\display\core.py", line 4055, in interact_core
+    root_widget.visit_all(lambda d : d.per_interact())
+  File "D:\renpy-8.1.3-sdk\renpy\display\core.py", line 684, in visit_all
+    d.visit_all(callback, seen)
+  File "D:\renpy-8.1.3-sdk\renpy\display\core.py", line 684, in visit_all
+    d.visit_all(callback, seen)
+  File "D:\renpy-8.1.3-sdk\renpy\display\core.py", line 684, in visit_all
+    d.visit_all(callback, seen)
+  [Previous line repeated 1 more time]
+  File "D:\renpy-8.1.3-sdk\renpy\display\screen.py", line 476, in visit_all
+    callback(self)
+  File "D:\renpy-8.1.3-sdk\renpy\display\core.py", line 4055, in <lambda>
+    root_widget.visit_all(lambda d : d.per_interact())
+  File "D:\renpy-8.1.3-sdk\renpy\display\screen.py", line 487, in per_interact
+    self.update()
+  File "D:\renpy-8.1.3-sdk\renpy\display\screen.py", line 680, in update
+    self.screen.function(**self.scope)
+  File "game/quiz.rpy", line 502, in execute
+    screen question_dull:
+  File "game/quiz.rpy", line 502, in execute
+    screen question_dull:
+  File "game/quiz.rpy", line 507, in execute
+    frame:
+  File "game/quiz.rpy", line 516, in execute
+    text "[number]. " + questions[question_num]:
+  File "game/quiz.rpy", line 516, in <module>
+    text "[number]. " + questions[question_num]:
+NameError: name 'questions' is not defined
 
 Windows-10-10.0.22621 AMD64
 Ren'Py 8.1.3.23091805
 Kodigo 1.0
-Sun Mar  3 12:11:26 2024
+Thu Mar 14 22:35:44 2024

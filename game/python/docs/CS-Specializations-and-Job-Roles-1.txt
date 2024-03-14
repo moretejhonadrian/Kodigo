@@ -2,7 +2,7 @@ Computer Science
 Specialization -
 Job Roles
 Software Developer
-o tasked with creating and developing websites, programs, and other
+ tasked with creating and developing websites, programs, and other
 applications that run on computers or other devices
 
  Skills needed:
@@ -11,7 +11,7 @@ applications that run on computers or other devices
   It’s also important to have knowledge of graphic design and a
    collaborative mindset while working with other designers on projects.
 Web Developer
-o are programmers that are concentrated on coding, designing, and
+ are programmers that are concentrated on coding, designing, and
 building out the layout of a website.
 
  Skills needed:
@@ -21,7 +21,7 @@ building out the layout of a website.
    detail oriented to be able to juggle multiple aspects are also highly
    valued
 UX Designer
-o are in charge of creating significant and relevant experiences for users of
+ are in charge of creating significant and relevant experiences for users of
 a particular product or platform. They’re part of the reason why you love
 your favorite apps and their interfaces.
 
@@ -30,7 +30,7 @@ your favorite apps and their interfaces.
    your success in this role–this expertise makes it easier to translate your
    design vision to your team.
 Mobile App Developer
-o are similar to Web Developers, except their area of expertise is creating,
+ are similar to Web Developers, except their area of expertise is creating,
 coding, and testing for mobile applications
 
  Skills needed:
@@ -38,7 +38,7 @@ coding, and testing for mobile applications
    good to know both programmatic languages—Java (for Androids) and
    Objective-C (for iPhones)
 IT Project Manager
-o are in charge of planning, budgeting, and basically running an
+ are in charge of planning, budgeting, and basically running an
 organization’s IT goals and initiatives
 
  Skills needed:
@@ -46,7 +46,7 @@ organization’s IT goals and initiatives
    you will be responsible for not only heading up a team, but guiding,
    hiring, and making decisions for the interest of all.
 Information Security Analyst
-o are in charge of implementing systems of safety and protecting a
+ are in charge of implementing systems of safety and protecting a
 company’s computer networks.
 
  Skills needed:
@@ -55,9 +55,9 @@ company’s computer networks.
   Being able to predict outcomes and adjust security accordingly is also
    key.
 Systems Architect
-o analyze a company holistically and figure out how to bring the best
+ analyze a company holistically and figure out how to bring the best
 possible IT strategy for their department’s goals.
-oThey define and design the architecture of said system to create the
+ They define and design the architecture of said system to create the
 highest quality experience possible.
 
  Skills needed:
@@ -66,7 +66,7 @@ highest quality experience possible.
   Being able to troubleshoot, assess, and translate customer needs is also
    good to have.
 AI Engineer
-o create, test, and develop computer systems with a goal of mimicking
+ create, test, and develop computer systems with a goal of mimicking
 human intelligence in said systems.
 
  Skills needed:
@@ -74,7 +74,7 @@ human intelligence in said systems.
    understanding of software development, linear algebra, probability,
    and statistics.
 Computer Hardware Engineer
-o are responsible for designing, researching, developing, and building
+ are responsible for designing, researching, developing, and building
 computer systems and components like chips, memory devices, and
 circuit boards.
 
@@ -83,8 +83,8 @@ circuit boards.
    collaboration when working with software developers on developing
    projects.
 Video Game Developer
-o are the coding heroes behind the games you play in your free time.
-o They code on various systems and conceptualize with other
+ are the coding heroes behind the games you play in your free time.
+ They code on various systems and conceptualize with other
 developers to create playable games.
 
  Skills needed:

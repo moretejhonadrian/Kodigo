@@ -27,10 +27,20 @@ init python:
             friend_1 = "Carla"
             friend_2 = "Jasmine"
 
+screen gender_choose:
+    image "bg mirror1"
+    imagebutton auto "male_%s.png" action Function(lambda: set_gender("male")), Jump("start_2"):
+        xalign 0.17
+        yalign 0.28
+
+    imagebutton auto "female_%s.png" action Function(lambda: set_gender("female")), Jump("start_2"):
+        xalign 0.84
+        yalign 0.28
+
 label start:
     with fade
     scene bg disclaimer with Pause(5)
-    scene bg torchday
+    scene bg frontday
 
     n "It's been 2 long years since the pandemic wreaked havoc upon the world,
     economies were put on hold, people were confined within their homes, jobs were put on hold and so school transitioned
@@ -49,27 +59,18 @@ label start:
 
     hide mom
     show bg mirror with dissolve
+    "..."
 
-    $ mc = renpy.input("What is your name?", length=32).capitalize()
+    $ mc = renpy.input("What is your name?", default="Alex", length=32).capitalize()
     $ mc = mc.strip()
+    if mc == "":
+        $ mc = "Alex"
 
     "What is your gender?"
+    call screen gender_choose with dissolve
 
-    screen gender_choose():
-        modal True
-
-        imagebutton auto "images/Characters/BU Students/MC_Male_Route/gender_temp_look/male happy_uniform_%s.png" action Function(lambda: set_gender("male")), Jump("start_2"):
-            xalign 0.3
-            yalign 0.5
-
-        imagebutton auto "images/Characters/BU Students/MC_Female_Route/gender_temp_look/female happy_uniform_%s.png" action Function(lambda: set_gender("female")), Jump("start_2"):
-            xalign 0.7
-            yalign 0.5
-
-    call screen gender_choose
-
-label start_2: #rename nalang
-    scene bg bedroom
+label start_2:
+    scene bg room
     show mc neutral_casual
     mc "Yes, ma. I'll be there."
 
@@ -102,7 +103,7 @@ label start_2: #rename nalang
     mc "It feels so bad being happy that I passed but you don't. I was really thinking of the places we'd go there."
     greg "Oh, cheer up [mcname]. Let's look into what we could do for the meantime."
     mc "I gotta tell this to Mommy. Let's go out later tonight to celebrate, shall we?"
-    greg "Yeah, that'll be fun! I'll see you tonight, *name*. Bye."
+    greg "Yeah, that'll be fun! I'll see you tonight, [mcname]. Bye."
 
     # ends the text messaging
     scene bg table with dissolve
@@ -238,7 +239,7 @@ label chapter1_1:
     hide mc
     scene bg livday
     show friend_2 admiring_casual
-    friend_2 " Good morning fellow dormer!"
+    jus "Good morning fellow dormer!"
     show friend_2 admiring_casual at right
     show mc neutral_casual at left
 
@@ -246,28 +247,28 @@ label chapter1_1:
         "Hello, good morning to you too!":
             $ points += 1
             show mc happy_casual at left
-            friend_2 "Hello! You’re new here too huh? What course are you from? I’m [friend_2] from BS Computer Science, 1st year"
+            jus "Hello! You’re new here too huh? What course are you from? I’m [friend_2] from BS Computer Science, 1st year"
             mc "I'm [mcname]! I guess were in the same program I see."
 
         "*Ignores*":
-            friend_2 "Quite the shy type huh, what course are you from?"
+            jus "Quite the shy type huh, what course are you from?"
             show friend_2 happy_casual at right with dissolve
-            friend_2 "I’m [friend_2] from BS Computer Science, 1st year"
+            jus "I’m [friend_2] from BS Computer Science, 1st year"
             mc "I'm [mcname]! I guess were in the same program I see."
 
         "Who in the world are you?":
             $ points -= 1
             show mc angry_casual at left
             show friend_2 confused_casual at right with dissolve
-            friend_2 "Woah woah, chill dude hehe."
+            jus "Woah woah, chill dude hehe."
             show friend_2 happy_casual at right with dissolve
-            friend_2 "I mean no harm just wanted to interact, I’m [friend_2] from BS Computer Science, 1st year"
+            jus "I mean no harm just wanted to interact, I’m [friend_2] from BS Computer Science, 1st year"
             show mc neutral_casual at left with dissolve
             mc "Oh, my bad. Anyway, I'm [mcname]. I guess were in the same program I see."
 
-    friend_2 "Nice! By any chance do you have your COR already?"
+    jus "Nice! By any chance do you have your COR already?"
     mc "I haven’t, I’m just about to go to the registrar to claim it."
-    friend_2 "Great! Why don’t we go there together?"
+    jus "Great! Why don’t we go there together?"
     mc "Sounds great! Let's go."
 
     with dissolve
@@ -296,10 +297,10 @@ label chapter1_1:
 
     scene bg walkaft with dissolve
     show friend_2 happy_uniform at right
-    friend_2 "Now that we have already claimed the COR, where are we going now?"
+    jus "Now that we have already claimed the COR, where are we going now?"
     show mc happy_uniform at left
     mc "I’m going to the tailor, I haven’t had my uniform sewn yet."
-    friend_2 "Alright then, I’ll see you back to the dorm then!"
+    jus "Alright then, I’ll see you back to the dorm then!"
     mc "See ya!"
 
     scene bg tailorshop with pixellate
@@ -340,7 +341,7 @@ label chapter1_1:
     scene bg livday with fade
     "*mc proceeds outside*"
     show friend_2 happy_uniform at right with fade
-    friend_2 " Just in time character! I was waiting for you so we can go out together. "
+    jus " Just in time character! I was waiting for you so we can go out together. "
     show mc happy_uniform at left with fade
     mc "Let's go"
 
@@ -349,10 +350,10 @@ label chapter1_1:
     scene bg building1 with dissolve
     n "As they arrrive in the room, [pronoun_reffered] can hear students murmuring, the place as lively as usual"
     show friend_2 shocked_uniform at left with dissolve
-    friend_2 "Sheeeesh, there are lots of students! I have no idea where we should be designated!"
+    jus "Sheeeesh, there are lots of students! I have no idea where we should be designated!"
     show mc shocked_uniform at right with fade
     mc "I guess we should just look for someone who we are familiar with, maybe a familiar face in the gc?"
-    friend_2 "I've never checked the GC so far LOL"
+    jus "I've never checked the GC so far LOL"
     show mc confused_uniform at right
     mc "Then were doooommmeeeedddd!!!!!!"
     "(*another student approaches, a guy with glasses with casual shirt and braces approaches*)"
@@ -398,7 +399,7 @@ label chapter1_1:
     show mc happy_uniform at left
     mc "Where do we go now dormmate?"
     show friend_2 confused_uniform at right
-    friend_2 "I dunno, maybe let’s go talk to  some of our classmates then?"
+    jus "I dunno, maybe let’s go talk to  some of our classmates then?"
     "*cutscene na naguusap chuchu*"
     "*encounters Johnny*"
 
@@ -418,7 +419,7 @@ label chapter1_1:
     show friend_2 happy_uniform at right
     mc " Oh well, I just hope we get to go along with our classmates!"
     show friend_2 happy_uniform at right
-    friend_2 "Yeah, I guess I’ll be going home for the meantime."
+    jus "Yeah, I guess I’ll be going home for the meantime."
     mc "Aight, I think I'll go with you"
 
     scene bg dormday with pushup
@@ -633,7 +634,7 @@ label mom_convo:
         "No thanks, I’m not interested":
             $ points -= 1
             show mc angry_casual at left with dissolve
-            show friend_1 sad_casual at right with dissolve
+            show friend_1 sad at right with dissolve
             friend_1 "Oh…….. Ok"
             hide friend_1
             "*[friend_1] leaves for breakfast*"
@@ -647,15 +648,15 @@ label mom_convo:
     scene bg crday with fade
     "*Character and Dormmate bumps into each other*"
     show friend_2 happy_casual at right with dissolve
-    friend_2 " Oh hey there character! What a coincidence you just woke up too?"
+    jus " Oh hey there character! What a coincidence you just woke up too?"
     show mc neutral_casual at left with dissolve
     mc "nah I just finished preparing my things for the first day of classes, you can never be too prepared"
     show friend_2 happy_casual at right with dissolve
-    friend_2 "You seem to be super excited rather than nervous in the first day huh"
+    jus "You seem to be super excited rather than nervous in the first day huh"
     show mc neutral_casual at left with dissolve
     mc "of course! It’s exciting to get to know more people other than the orientation, plus i am somehow excited on how our professors look like and how they act"
     show friend_2 happy_casual at right with dissolve
-    friend_2 "Heh…. I wish I had your enthusiasm, anyways we better get going we might be late to class. Let’s go together gooing to class i am kinda nervous hehe."
+    jus "Heh…. I wish I had your enthusiasm, anyways we better get going we might be late to class. Let’s go together gooing to class i am kinda nervous hehe."
     show mc neutral_casual at left with dissolve
     mc "aight then I’ll be going now as well"
     hide mc
@@ -674,7 +675,7 @@ label mom_convo:
             show mc angry_casual at left with dissolve
             mc "What the hell have you been doing? We are almost late!"
             show friend_2 sad_uniform at right with dissolve
-            friend_2 "Sorry character *tired sighs* I had the urge to take a call of nature at the worst time, I’ve already had my clothes on but i had to take them of cause of the urge."
+            jus "Sorry character *tired sighs* I had the urge to take a call of nature at the worst time, I’ve already had my clothes on but i had to take them of cause of the urge."
             hide mc
             show mc neutral_uniform at left with dissolve
             mc "you really had to sugarcoat the term for taking a poop. Anyways we better get going or madam will get mad at us, we should go for a run at it."
@@ -689,7 +690,7 @@ label mom_convo:
             show mc happy_uniform at left with dissolve
             mc "Just kidding"
             show just sad_uniform at right with dissolve
-            friend_2 "You didn’t need to be so frank with it, lol. It’s what you call being clutch"
+            jus "You didn’t need to be so frank with it, lol. It’s what you call being clutch"
             show mc happy_uniform at left with dissolve
             mc "Clutch your face, we better find ourselves a seat now since class is about to begin"
 
@@ -710,13 +711,13 @@ label mom_convo:
             mc "Just in time did I arrive. Now it's time to find myself a seat."
             "*after a few moments, [friend_2] arrives"
             show friend_2 angry_uniform at right with dissolve
-            friend_2 "Dude! You literally left me tsk"
+            jus "Dude! You literally left me tsk"
             hide mc
             show mc sad_uniform at left with dissolve
             mc "You were taking too long! It was the first day I can’t afford to be late, I’m truly sorry"
             hide friend_2
             show friend_2 happy_uniform at right with dissolve
-            friend_2 " Nah I was just messing with ya, I took too long to prepare so that one’s on me"
+            jus " Nah I was just messing with ya, I took too long to prepare so that one’s on me"
             hide mc
             show mc neutral_uniform at left with dissolve
             mc "Ok then, go get yourself a seat already cause class will start"
@@ -763,7 +764,7 @@ label mom_convo:
     "*everyone goes into frenzy as the class ends"
     scene bg fieldday with move
     show friend_2 sad_uniform at right with dissolve
-    friend_2 "Yow dude, did you just see the curriculum for that subject! Just by looking at the topics it feels like it’s getting brutal"
+    jus "Yow dude, did you just see the curriculum for that subject! Just by looking at the topics it feels like it’s getting brutal"
     show mc sad_uniform at left with dissolve
     mc "Tell me about it, just reading the first topic already made my mind about to explode."
     "*Johnny walks by*"
@@ -789,25 +790,25 @@ label mom_convo:
 
     scene bg fieldday with move
     show friend_2 neutral_uniform at right with dissolve
-    friend_2 "That dude's wierd, but he is cool after all"
+    jus "That dude's wierd, but he is cool after all"
     show mc neutral_uniform at left with dissolve
     mc "I think so too, maybe we're just being too you know"
     hide friend_2 admiring_casual
     show just sad_uniform at right with dissolve
-    friend_2 "Being too what?"
+    jus "Being too what?"
     show mc neutral_uniform at left with dissolve
     mc "Nevermind, it’s nothing you really are slow when it comes to things at times lol"
     hide friend_2
     show friend_2 happy_uniform at right with dissolve
-    friend_2 "You’re not wrong there, anyways I heard that there’s going to be an event"
+    jus "You’re not wrong there, anyways I heard that there’s going to be an event"
     hide mc
     show mc shocked_uniform at left with dissolve
     mc "Oh really? What's your source on this said event?"
-    friend_2 " I just kinda heard our classmates talking about it earlier, maybe some of them has some knowledge about it?"
+    jus " I just kinda heard our classmates talking about it earlier, maybe some of them has some knowledge about it?"
     hide mc
     show mc neutral_uniform at left with dissolve
     mc "Hmm maybe it’s just rumors tho. You know what I just met an upperclassmen we can ask for the credibility of the event"
-    friend_2 "Alright then, let's go"
+    jus "Alright then, let's go"
     hide mc
     hide friend_2
     "*Both character and [friend_2] goes to the CSC office"
@@ -831,12 +832,12 @@ label mom_convo:
             mike "No need to be stingy! This is just a me thing, going back to your question it is true that there is an upcoming freshman party and the big stuff is that there is a concert where the bands comes from our department"
     hide mike
     show friend_2 confused_uniform at right with dissolve
-    friend_2 "If that’s the case, are students excused during the said event?"
+    jus "If that’s the case, are students excused during the said event?"
     show mike happy_uniform at center with dissolve
     mike "There is a chance that students are only excused from their 5 o clock classes onwards if it is applicable to their schedule"
     hide friend_2
-    show friend_2 sad_uniform at right with dissolve
-    friend_2 " Ohh it’s look’s like there are going to be some problems with our schedule during the freshman party character"
+    show jus sad_uniform at right with dissolve
+    jus " Ohh it’s look’s like there are going to be some problems with our schedule during the freshman party character"
     hide mc
     show mc neutral_uniform at left with dissolve
     mc "Seems like it. Hold on lemme check our schedule first *pulls out phone and shows schedule*"
@@ -910,7 +911,7 @@ label mom_convo:
     mc "Ahh I'm finally done getting ready! I wonder we're gonna do today for PE hmm"
     scene bg liveday with fade
     show friend_2 happy_pe at right with dissolve
-    friend_2 " Hey character! Are you ready for the first day of PE!"
+    jus " Hey character! Are you ready for the first day of PE!"
     show mc happy_pe at left with dissolve
     mc "I sure as hell do! Let's go now"
     hide mc
@@ -946,7 +947,7 @@ label mom_convo:
     dev "Prepare yourselves as this class will not be easy"
     hide devier
     show friend_2 confused at left with dissolve
-    friend_2 "Sir, what is it that we'll be doing today?"
+    jus "Sir, what is it that we'll be doing today?"
     show devier happy at right with dissolve
     dev "That’s a good question, let’s start off with athletics! I’ll pair you up with someone and then we can begin the exercise."
     hide devier
@@ -958,7 +959,7 @@ label mom_convo:
     show mc happy_pe at left with dissolve
     mc "Huh I guess it’s you and me that gets partnered again here huh dormate"
     show friend_2 happy_pe at right with dissolve
-    friend_2 "HAHAHAHAHA what are the odds character! I guess this means we begin a friendly rivalry here!"
+    jus "HAHAHAHAHA what are the odds character! I guess this means we begin a friendly rivalry here!"
     mc "Bring it on dormmate!"
     hide mc
     hide friend_2
@@ -996,7 +997,7 @@ label mom_convo:
             show friend_2 sad_pe at right with dissolve
             show lurs sad_pe at center with dissolve
             lurs "Ohh huhuhuhu"
-            friend_2 "Don't be like that character, don't mind him Johnny he can be real stingy sometimes"
+            jus "Don't be like that character, don't mind him Johnny he can be real stingy sometimes"
 
     hide friend_2
     hide mc
@@ -1022,11 +1023,11 @@ label mom_convo:
     show mc shocked_pe at left with dissolve
     mc "Holy macaroni, I did not expect that we’d get put into the fire that quickly. *gasping*"
     show friend_2 tired_pe at right with dissolve
-    friend_2 " Tell me about it. Oh I almost forgot that the freshman party is nearing the horizon, what do you plan to do?"
+    jus " Tell me about it. Oh I almost forgot that the freshman party is nearing the horizon, what do you plan to do?"
     hide mc
     show mc neutral_pe at left with dissolve
     mc "nothing really much to be honest, there’s a quiz upcoming in our Intro to Computing class. So I need to review as much as I can"
-    friend_2 "You’re right I almost forgot that! Anyways I must also study hard for the upcoming quiz, it surely won’t be easy0"
+    jus "You’re right I almost forgot that! Anyways I must also study hard for the upcoming quiz, it surely won’t be easy0"
     mc "Sure as hell won't be easy"
     hide mc
     hide friend_2
@@ -1036,7 +1037,7 @@ label mom_convo:
     show mc happy_uniform at left with dissolve
     mc "Are you ready for the quiz dormmate?"
     show friend_2 happy_uniform at right with dissolve
-    friend_2 "Sure as hell I am! Anyways we should get going we don’t want to be late again for this quiz"
+    jus "Sure as hell I am! Anyways we should get going we don’t want to be late again for this quiz"
     mc "You are really an easy goig one huh, anyways let's go"
     scene bg comlab with fade
     "*character and dormmate arrives*"
@@ -1052,27 +1053,5 @@ label mom_convo:
     "*CHAPTER 1 ends (after the choice)"
     #There will be choice where the character can cheat or finish the exam honestly
     #Based on his score/choice will chapter 2 start
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 return
