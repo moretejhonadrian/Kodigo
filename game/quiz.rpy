@@ -85,8 +85,6 @@ init python:
     def exit_quiz():
         if quiz_type == "standard":
             renpy.show_screen("standard_quizzes")
-        elif quiz_type == "custom":
-            renpy.show_screen("custom_quizzes")
 
 screen quiz_instructions:
     tag menu
@@ -140,7 +138,7 @@ screen program_quiz_protocol():
     imagebutton auto "images/Button/standard_quiz_%s.png" action ShowMenu("standard_quizzes"):
         yalign 0.55
         xalign 0.5
-    imagebutton auto "images/Button/custom_quiz_%s.png" action Jump("custom_quizzes"):
+    imagebutton auto "images/Button/custom_quiz_%s.png": #tbd #action Jump("custom_quizzes"):
         yalign 0.7
         xalign 0.5
 
@@ -190,26 +188,6 @@ screen standard_quizzes():
                 yoffset 20
             imagebutton auto "images/Button/notes_%s.png" action [ShowMenu("display_notes"), Function(set_quiz, "OS Fundamentals"), Function(set_quiz_type, "standard")]:
                 yoffset 10
-
-label custom_quizzes:
-    show bg quiz main with dissolve
-    show mc happy_uniform at left
-
-    screen custom():
-        imagebutton auto "images/Minigames Menu/exit_%s.png":
-            xalign 0.86
-            yalign 0.04
-
-    show screen custom
-
-    "Coming soon."
-
-    hide bg
-    hide mc
-    hide screen custom
-    call screen program_quiz_protocol with dissolve
-
-#screen display_quiz():
 
 screen display_notes():
     add "bg quiz main"
@@ -345,7 +323,11 @@ label quiz_proper:
 
     screen question():
         $ show_s("question_dull")
+<<<<<<< HEAD
+        imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("question"), Hide("countdown"), Show("paused_menu")]: #action pending
+=======
         imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("countdown"), Show("paused_menu")]: #action pending
+>>>>>>> dd2e81a7bae36b0a6dfce12ce133b5042a8ab5b9
             xalign 0.86
             yalign 0.04
 
@@ -500,7 +482,6 @@ label results:
     call screen standard_quizzes
 
 screen question_dull:
-
     imagebutton auto "images/Button/pause_quiz_%s.png": #action pending
         xalign 0.86
         yalign 0.04
