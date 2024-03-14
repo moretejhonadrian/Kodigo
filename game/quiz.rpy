@@ -85,8 +85,6 @@ init python:
     def exit_quiz():
         if quiz_type == "standard":
             renpy.show_screen("standard_quizzes")
-        elif quiz_type == "custom":
-            renpy.show_screen("custom_quizzes")
 
 screen quiz_instructions:
     tag menu
@@ -325,7 +323,11 @@ label quiz_proper:
 
     screen question():
         $ show_s("question_dull")
+<<<<<<< HEAD
         imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("question"), Hide("countdown"), Show("paused_menu")]: #action pending
+=======
+        imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("countdown"), Show("paused_menu")]: #action pending
+>>>>>>> dd2e81a7bae36b0a6dfce12ce133b5042a8ab5b9
             xalign 0.86
             yalign 0.04
 
