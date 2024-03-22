@@ -6,6 +6,15 @@ init:
     $ paused_time = 0
     $ time = 12
 
+    #bkt
+    $ L  = 0.1 #initial probability that the student already knew a skill
+    $ T = 0.1 #pprobability that the student will learn a skill on the next practice opportunity
+    $ S = 0.1 #probability that the student will answer incorrectly despite knowing a skill
+    $ G = 0.3 #that the student will answer correctly despite not knowing a skill
+    $ A = 0 #action
+    $ mastery_threshold = 0.8
+
+
 image halfblack = "#00000088"
 
 init python:
@@ -16,9 +25,21 @@ init python:
     def is_subprocess_finished(process):
         return process.poll() is not None
 
+    def get_quiz_record():
+        global quiz_record #for all for now
+        quiz_record = {} #put this somewhere else
+
+        with open(f"D:/renpy-8.1.3-sdk/kodigo/game/python/quizzes/q_records.json", 'r') as file:
+            quiz_record = json.load(file)
+
     def set_quiz(quiz):
         global current_quiz
         current_quiz = quiz
+
+        # Check if current_quiz is not already a key in the dictionary
+        if current_quiz not in quiz_record:
+            # Add current_quiz as a key and initialize its value as an empty list
+            quiz_record[current_quiz] = {'records': [], 'mastery': []}
 
     def set_quiz_type(type):
         global quiz_type
@@ -71,7 +92,7 @@ init python:
         n = len(temp_questions)
         n_list = []
 
-        while max != 15:
+        while max != 5:
             rand = random.randrange(0, n)
             if rand not in n_list and temp_options[rand] != None:
                 n_list.append(rand)
@@ -81,6 +102,10 @@ init python:
                 options.append(temp_options[rand])
                 answers_word.append(temp[rand])
                 max += 1
+
+    def save_quiz_record():
+        with open(f"D:/renpy-8.1.3-sdk/kodigo/game/python/quizzes/q_records.json", "w") as json_file:
+            json.dump(quiz_record, json_file)
 
     def exit_quiz():
         if quiz_type == "standard":
@@ -126,6 +151,8 @@ screen quiz_instructions:
 screen program_quiz_protocol():
     tag menu
     add "bg quiz main"
+
+    $ get_quiz_record()
 
     add "quiz title":
         yalign 0.2
@@ -186,6 +213,8 @@ screen standard_quizzes():
                 yalign 0.5
             imagebutton auto "images/Button/quiz_play_%s.png" action [Function(set_quiz, "OS Fundamentals"), Jump("init_quiz"), Function(set_quiz_type, "standard")]:
                 yoffset 20
+            imagebutton auto "images/Button/status_%s.png" action [Function(set_quiz, "OS Fundamentals"), Jump("quiz_status"), Function(set_quiz_type, "standard")]:
+                yoffset 20
             imagebutton auto "images/Button/notes_%s.png" action [ShowMenu("display_notes"), Function(set_quiz, "OS Fundamentals"), Function(set_quiz_type, "standard")]:
                 yoffset 10
 
@@ -228,11 +257,12 @@ screen display_notes():
 
 style notes_style:
     font "KronaOne-Regular.ttf"
-    #justify True
+    justify True
     size 24
     color "#303031"
 
 label init_quiz:
+    $ hide_s("question_dull")
     with fade
     show bg quiz main
 
@@ -323,11 +353,7 @@ label quiz_proper:
 
     screen question():
         $ show_s("question_dull")
-<<<<<<< HEAD
         imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("question"), Hide("countdown"), Show("paused_menu")]: #action pending
-=======
-        imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("countdown"), Show("paused_menu")]: #action pending
->>>>>>> dd2e81a7bae36b0a6dfce12ce133b5042a8ab5b9
             xalign 0.86
             yalign 0.04
 
@@ -430,6 +456,7 @@ screen paused:
     image "images/Minigames Menu/timer/[paused_time].png" xalign 0.85 yalign 0.85
 
 label right:
+    pause 0.5
     hide screen countdown
     $ paused_time = int(time)
     show screen paused
@@ -447,6 +474,7 @@ label right:
     jump next_question
 
 label wrong:
+    pause 0.5
     hide screen countdown
     show screen paused
     $ paused_time = int(time)
@@ -468,7 +496,7 @@ label wrong:
 label next_question:
     $ question_num += 1
 
-    if question_num == 15:
+    if question_num == 5:
         $ question_num = 0
         jump results
 
@@ -479,10 +507,134 @@ label results:
     hide screen countdown
     $ hide_s("question_dull")
     "Your score is [score]!"
-    call screen standard_quizzes
+
+    python:
+        if score/5 >= 0.5:
+            A = (L*(1-S)) / (L*(1-S) + (1-L)*G)
+            L = A + (1-A)*T
+        else:
+            A = (L*S) / ((L*S) + (1-L)*(1-G))
+            L = A + (1-A)*T
+
+    $ quiz_record[current_quiz]['records'].append(score)
+    #reset
+    $ score = 0
+    $ mastery = round(L * 100, 2)
+    $ quiz_record[current_quiz]['mastery'].append(mastery)
+
+    $ save_quiz_record()
+
+    jump quiz_status
+
+#status of quiz etc
+label quiz_status:
+    show bg quiz main with None
+
+    python:
+        if len(quiz_record[current_quiz]['mastery']) == 0:
+            mastery = 0
+        else:
+            mastery = quiz_record[current_quiz]['mastery'][-1]
+
+    screen status:
+        imagebutton auto "images/Minigames Menu/exit_%s.png" action ShowMenu("standard_quizzes"): #don't know yet
+            xalign 0.86
+            yalign 0.04
+
+        text current_quiz:
+            font "Copperplate Gothic Bold Regular.ttf"
+            size 50
+            color "#FFFFFF"
+            xalign 0.5
+            yalign 0.15
+
+        text "Mastery":
+            font "Copperplate Gothic Bold Regular.ttf"
+            size 40
+            color "#FFFFFF"
+            xalign 0.5
+            yalign 0.3
+
+        text "[mastery]%":
+            font "Copperplate Gothic Bold Regular.ttf"
+            size 30
+            color "#FFFFFF"
+            xalign 0.5
+            yalign 0.38
+
+        imagebutton auto "images/Button/retry_%s.png" action [Hide("status"), Call("init_quiz")]:
+            xalign 0.5
+            yalign 0.5
+
+        imagebutton auto "images/Button/pass_attempts_%s.png" action [Hide("status"), Call("scoreboard")]:
+            xalign 0.5
+            yalign 0.65
+
+    call screen status with fade
+
+label scoreboard:
+    show bg quiz main
+
+    screen scores():
+        imagebutton auto "images/Minigames Menu/exit_%s.png" action ShowMenu("standard_quizzes"): #don't know yet
+            xalign 0.86
+            yalign 0.04
+
+        text current_quiz:
+            font "Copperplate Gothic Bold Regular.ttf"
+            size 50
+            color "#FFFFFF"
+            xalign 0.5
+            yalign 0.15
+
+        text "Passed Attempts":
+            font "Copperplate Gothic Bold Regular.ttf"
+            size 40
+            color "#FFFFFF"
+            xalign 0.5
+            yalign 0.25
+
+        vpgrid:
+            cols 1
+            mousewheel True
+            scrollbars "vertical"
+            xalign 0.5
+            yalign 0.6
+            ysize 450
+
+            vbox:
+                spacing 10
+                text "SCORE               MASTERY       " style "status_style"
+
+                for i in range(len(quiz_record[current_quiz]['records'])):
+                    $ score = quiz_record[current_quiz]['records'][i]
+                    $ mastery = quiz_record[current_quiz]['mastery'][i]
+                    text "      [score]                       [mastery]%        " style "status_style"
+
+        python:
+            if len(quiz_record[current_quiz]['mastery']) == 0:
+                mastery = 0
+            else:
+                mastery = quiz_record[current_quiz]['mastery'][-1]
+
+        text "[mastery]%" style "status_style":
+            xalign 0.5
+            yalign 0.8
+            yoffset 20
+
+        imagebutton auto "images/Button/play_%s.png" action [Hide("display_notes"), Jump("init_quiz")]:
+            xalign 0.98
+            yalign 0.98
+
+    call screen scores
+
+style status_style:
+    font "Copperplate Gothic Bold Regular.ttf"
+    size 30
+    color "#FFFFFF"
 
 screen question_dull:
-    imagebutton auto "images/Button/pause_quiz_%s.png": #action pending
+    imagebutton auto "images/Button/pause_quiz_%s.png":
         xalign 0.86
         yalign 0.04
 
