@@ -92,7 +92,7 @@ init python:
         n = len(temp_questions)
         n_list = []
 
-        while max != 5:
+        while max != 15:
             rand = random.randrange(0, n)
             if rand not in n_list and temp_options[rand] != None:
                 n_list.append(rand)
@@ -213,7 +213,7 @@ screen standard_quizzes():
                 yalign 0.5
             imagebutton auto "images/Button/quiz_play_%s.png" action [Function(set_quiz, "OS Fundamentals"), Jump("init_quiz"), Function(set_quiz_type, "standard")]:
                 yoffset 20
-            imagebutton auto "images/Button/status_%s.png" action [Function(set_quiz, "OS Fundamentals"), Jump("quiz_status"), Function(set_quiz_type, "standard")]:
+            imagebutton auto "images/Button/status_%s.png" action [Function(set_quiz, "OS Fundamentals"), ShowMenu("quiz_status"), Function(set_quiz_type, "standard")]:
                 yoffset 20
             imagebutton auto "images/Button/notes_%s.png" action [ShowMenu("display_notes"), Function(set_quiz, "OS Fundamentals"), Function(set_quiz_type, "standard")]:
                 yoffset 10
@@ -352,6 +352,7 @@ label quiz_proper:
         image "images/Minigames Menu/timer/[current_time].png" xalign 0.85 yalign 0.85
 
     screen question():
+        modal True
         $ show_s("question_dull")
         imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("question"), Hide("countdown"), Show("paused_menu")]: #action pending
             xalign 0.86
@@ -496,7 +497,7 @@ label wrong:
 label next_question:
     $ question_num += 1
 
-    if question_num == 5:
+    if question_num == 15:
         $ question_num = 0
         jump results
 
@@ -509,7 +510,7 @@ label results:
     "Your score is [score]!"
 
     python:
-        if score/5 >= 0.5:
+        if score/15 >= 0.7:
             A = (L*(1-S)) / (L*(1-S) + (1-L)*G)
             L = A + (1-A)*T
         else:
@@ -524,11 +525,11 @@ label results:
 
     $ save_quiz_record()
 
-    jump quiz_status
+    call screen quiz_status
 
 #status of quiz etc
-label quiz_status:
-    show bg quiz main with None
+screen quiz_status:
+    add "bg quiz main"
 
     python:
         if len(quiz_record[current_quiz]['mastery']) == 0:
@@ -536,97 +537,91 @@ label quiz_status:
         else:
             mastery = quiz_record[current_quiz]['mastery'][-1]
 
-    screen status:
-        imagebutton auto "images/Minigames Menu/exit_%s.png" action ShowMenu("standard_quizzes"): #don't know yet
-            xalign 0.86
-            yalign 0.04
+    imagebutton auto "images/Minigames Menu/exit_%s.png" action ShowMenu("standard_quizzes"): #don't know yet
+        xalign 0.86
+        yalign 0.04
 
-        text current_quiz:
-            font "Copperplate Gothic Bold Regular.ttf"
-            size 50
-            color "#FFFFFF"
-            xalign 0.5
-            yalign 0.15
+    text current_quiz:
+        font "Copperplate Gothic Bold Regular.ttf"
+        size 50
+        color "#FFFFFF"
+        xalign 0.5
+        yalign 0.15
 
-        text "Mastery":
-            font "Copperplate Gothic Bold Regular.ttf"
-            size 40
-            color "#FFFFFF"
-            xalign 0.5
-            yalign 0.3
+    text "Mastery":
+        font "Copperplate Gothic Bold Regular.ttf"
+        size 40
+        color "#FFFFFF"
+        xalign 0.5
+        yalign 0.3
 
-        text "[mastery]%":
-            font "Copperplate Gothic Bold Regular.ttf"
-            size 30
-            color "#FFFFFF"
-            xalign 0.5
-            yalign 0.38
+    text "[mastery]%":
+        font "Copperplate Gothic Bold Regular.ttf"
+        size 30
+        color "#FFFFFF"
+        xalign 0.5
+        yalign 0.38
 
-        imagebutton auto "images/Button/retry_%s.png" action [Hide("status"), Call("init_quiz")]:
-            xalign 0.5
-            yalign 0.5
+    imagebutton auto "images/Button/retry_%s.png" action [Hide("quiz_status"), Call("init_quiz")]:
+        xalign 0.5
+        yalign 0.5
 
-        imagebutton auto "images/Button/pass_attempts_%s.png" action [Hide("status"), Call("scoreboard")]:
-            xalign 0.5
-            yalign 0.65
+    imagebutton auto "images/Button/pass_attempts_%s.png" action [Hide("quiz_status"), ShowMenu("scoreboard")]:
+        xalign 0.5
+        yalign 0.65
 
-    call screen status with fade
+screen scoreboard:
+    add "bg quiz main"
 
-label scoreboard:
-    show bg quiz main
+    imagebutton auto "images/Minigames Menu/exit_%s.png" action [Hide("scoreboard"), ShowMenu("standard_quizzes")]: #don't know yet
+        xalign 0.86
+        yalign 0.04
 
-    screen scores():
-        imagebutton auto "images/Minigames Menu/exit_%s.png" action ShowMenu("standard_quizzes"): #don't know yet
-            xalign 0.86
-            yalign 0.04
+    text current_quiz:
+        font "Copperplate Gothic Bold Regular.ttf"
+        size 50
+        color "#FFFFFF"
+        xalign 0.5
+        yalign 0.15
 
-        text current_quiz:
-            font "Copperplate Gothic Bold Regular.ttf"
-            size 50
-            color "#FFFFFF"
-            xalign 0.5
-            yalign 0.15
+    text "Passed Attempts":
+        font "Copperplate Gothic Bold Regular.ttf"
+        size 40
+        color "#FFFFFF"
+        xalign 0.5
+        yalign 0.25
 
-        text "Passed Attempts":
-            font "Copperplate Gothic Bold Regular.ttf"
-            size 40
-            color "#FFFFFF"
-            xalign 0.5
-            yalign 0.25
+    vpgrid:
+        cols 1
+        mousewheel True
+        scrollbars "vertical"
+        xalign 0.5
+        yalign 0.5
+        ysize 450
 
-        vpgrid:
-            cols 1
-            mousewheel True
-            scrollbars "vertical"
-            xalign 0.5
-            yalign 0.6
-            ysize 450
+        vbox:
+            spacing 10
+            text "SCORE               MASTERY       " style "status_style"
 
-            vbox:
-                spacing 10
-                text "SCORE               MASTERY       " style "status_style"
+            for i in range(len(quiz_record[current_quiz]['records'])):
+                $ score = quiz_record[current_quiz]['records'][i]
+                $ mastery = quiz_record[current_quiz]['mastery'][i]
+                text "      [score]                       [mastery]%        " style "status_style"
 
-                for i in range(len(quiz_record[current_quiz]['records'])):
-                    $ score = quiz_record[current_quiz]['records'][i]
-                    $ mastery = quiz_record[current_quiz]['mastery'][i]
-                    text "      [score]                       [mastery]%        " style "status_style"
+    python:
+        if len(quiz_record[current_quiz]['mastery']) == 0:
+            mastery = 0
+        else:
+            mastery = quiz_record[current_quiz]['mastery'][-1]
 
-        python:
-            if len(quiz_record[current_quiz]['mastery']) == 0:
-                mastery = 0
-            else:
-                mastery = quiz_record[current_quiz]['mastery'][-1]
+    text "[mastery]%" style "status_style":
+        xalign 0.5
+        yalign 0.8
+        yoffset 20
 
-        text "[mastery]%" style "status_style":
-            xalign 0.5
-            yalign 0.8
-            yoffset 20
-
-        imagebutton auto "images/Button/play_%s.png" action [Hide("display_notes"), Jump("init_quiz")]:
-            xalign 0.98
-            yalign 0.98
-
-    call screen scores
+    imagebutton auto "images/Button/play_%s.png" action [Hide("scoreboard"), Jump("init_quiz")]:
+        xalign 0.98
+        yalign 0.98
 
 style status_style:
     font "Copperplate Gothic Bold Regular.ttf"
