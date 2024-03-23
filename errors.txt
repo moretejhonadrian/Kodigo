@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/quiz.rpy", line 368: expected ',' not found.
-    screen choice(options[question_num]):
-                         ^
+File "game/quiz.rpy", line 305: end of line expected.
+    imagebutton auto "images/Minigames Menu/exit_%s.png":
+                                                        ^
 
 Ren'Py Version: Ren'Py 8.1.3.23091805
-Sat Mar 23 03:26:05 2024
+Sat Mar 23 21:23:23 2024

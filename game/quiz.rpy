@@ -1,3 +1,12 @@
+"""
+things to fix:
+    1. polish quiz ui
+    2. integrate ai
+    3. fix assets
+    4. add toolkits
+    5. add comments
+"""
+
 init:
     $ question_num = 0
     $ score = 0
@@ -5,6 +14,12 @@ init:
     $ timer_jump = 0
     $ paused_time = 0
     $ time = 12
+    $ base_path = ""
+
+    $ quiz_title = "Quiz" #for uploading quiz
+
+    $ timeout = 12 # Sets how long in seconds the user has to make a choice
+    $ timeout_label = 'wrong'
 
     #bkt
     $ L  = 0.1 #initial probability that the student already knew a skill
@@ -21,6 +36,15 @@ init python:
     import json
     import random
     import subprocess
+    import os
+
+    base_path = os.getcwd()
+
+    def terminate(process):
+        process.terminate()
+
+    def get_path(relative_path):
+        return os.path.join(base_path, relative_path)
 
     def is_subprocess_finished(process):
         return process.poll() is not None
@@ -29,24 +53,29 @@ init python:
         global quiz_record #for all for now
         quiz_record = {} #put this somewhere else
 
-        with open(f"D:/renpy-8.1.3-sdk/kodigo/game/python/quizzes/q_records.json", 'r') as file:
+        file_path = get_path(f"kodigo/game/python/quizzes/q_records.json")
+
+        with open(file_path, 'r') as file:
             quiz_record = json.load(file)
 
     def set_quiz(quiz):
         global current_quiz
         current_quiz = quiz
 
+        #put this somwhere else
         # Check if current_quiz is not already a key in the dictionary
-        if current_quiz not in quiz_record:
+        if current_quiz not in quiz_record["standard"]:
             # Add current_quiz as a key and initialize its value as an empty list
-            quiz_record[current_quiz] = {'records': [], 'mastery': []}
+            quiz_record["standard"][current_quiz] = {'records': [], 'mastery': []}
+            save_quiz_record()
 
     def set_quiz_type(type):
         global quiz_type
         quiz_type  = type
 
     def get_notes():
-        with open(f"D:/renpy-8.1.3-sdk/kodigo/game/python/docs/{current_quiz}.txt", 'r') as file:
+        file_path = get_path(f"kodigo/game/python/docs/{current_quiz}.txt")
+        with open(file_path, 'r') as file:
             notes = file.readlines()
         return notes
 
@@ -56,7 +85,8 @@ init python:
         global answers   #letters
         global answers_word
 
-        with open(f"D:/renpy-8.1.3-sdk/kodigo/game/python/quizzes/OS Fundamentals.json", 'r') as file:
+        file_path = get_path(f"kodigo/game/python/quizzes/OS Fundamentals.json")
+        with open(file_path, 'r') as file:
             quiz = json.load(file)
 
         questions = []
@@ -104,7 +134,8 @@ init python:
                 max += 1
 
     def save_quiz_record():
-        with open(f"D:/renpy-8.1.3-sdk/kodigo/game/python/quizzes/q_records.json", "w") as json_file:
+        file_path = get_path(f"kodigo/game/python/quizzes/q_records.json")
+        with open(file_path, "w") as json_file:
             json.dump(quiz_record, json_file)
 
     def exit_quiz():
@@ -165,7 +196,7 @@ screen program_quiz_protocol():
     imagebutton auto "images/Button/standard_quiz_%s.png" action ShowMenu("standard_quizzes"):
         yalign 0.55
         xalign 0.5
-    imagebutton auto "images/Button/custom_quiz_%s.png": #tbd #action Jump("custom_quizzes"):
+    imagebutton auto "images/Button/custom_quiz_%s.png"action ShowMenu("custom_quizzes"):
         yalign 0.7
         xalign 0.5
 
@@ -176,6 +207,144 @@ screen program_quiz_protocol():
     # Check if the subprocess has finished
     #while not is_subprocess_finished(process):
     #    pause 0.1
+
+screen custom_quizzes:
+    tag menu
+    add "bg quiz main"
+
+    imagebutton auto "images/Minigames Menu/exit_%s.png" action [Hide("custom_quizzes"), ShowMenu("program_quiz_protocol")]:
+        xalign 0.86
+        yalign 0.04
+
+    text "QU/ZZES":
+        font "Copperplate Gothic Thirty-Three Regular.otf"
+        size 92
+        color "#FFFFFF"
+        xalign 0.5
+        yalign 0.15
+
+    if len(quiz_record["custom"]) == 0:
+        text "No quiz available.":
+            font "Copperplate Gothic Thirty-Three Regular.otf"
+            size 60
+            color "#FFFFFF"
+            xalign 0.25
+            yalign 0.3
+
+    imagebutton auto "images/Button/create_quiz_%s.png" action ShowMenu("create_quiz"):
+        xalign 0.5
+        yalign 0.8
+
+screen create_quiz:
+    tag menu
+    add "bg quiz main"
+
+    imagebutton auto "images/Minigames Menu/exit_%s.png" action [Hide("create_quiz"), ShowMenu("custom_quizzes")]:
+        xalign 0.86
+        yalign 0.04
+
+    text "Notes":
+            font "Copperplate Gothic Thirty-Three Regular.otf"
+            size 48
+            color "#FFFFFF"
+            xalign 0.324
+            yalign 0.15
+
+    frame:
+        xalign 0.25
+        yalign 0.5
+        xpadding 40
+        ypadding 40
+        xsize 600
+        ysize 600
+        background "#D9D9D9"
+
+    vbox:
+        xalign 0.738
+        yalign 0.4
+
+        text "Keywords":
+                font "Copperplate Gothic Thirty-Three Regular.otf"
+                size 48
+                color "#FFFFFF"
+                xalign 0.5
+                yalign 0.5
+
+        frame:
+            xalign 0.25
+            yalign 0.5
+            xpadding 40
+            ypadding 40
+            xsize 400
+            ysize 400
+            background "#D9D9D9"
+            yoffset 30
+
+    hbox:
+        xalign 0.690
+        yalign 0.15
+
+        text "[quiz_title]": #specify with a number later
+                font "Copperplate Gothic Thirty-Three Regular.otf"
+                size 60
+                color "#FFFFFF"
+
+        imagebutton auto "images/Button/edit_title_%s.png" action Jump("edit_title"):
+            xoffset 40
+
+    imagebutton auto "images/Button/upload_%s.png" action Jump("upload_file"):
+        xalign 0.75
+        yalign 0.8
+
+label edit_title:
+    $ show_s("create_quiz_dull")
+    hide screen create_quiz
+
+    python:
+        old_file_path = get_path(f"kodigo/game/python/docs/{quiz_title}.txt")
+        quiz_title = renpy.input("Quiz name:", length=32)
+        quiz_title = quiz_title.strip()
+        new_file_path = get_path(f"kodigo/game/python/docs/{quiz_title}.txt")
+
+        if os.path.exists(old_file_path):
+            os.rename(old_file_path, new_file_path)
+
+    $ hide_s("create_quiz_dull")
+    call screen create_quiz
+
+label upload_file:
+    $ show_s("create_quiz_dull")
+    show halfblack
+    hide screen create_quiz
+    $ python_path = get_path(f"kodigo/game/python/python.exe")
+    $ py_path = get_path(f"kodigo/game/python/upload_file.py")
+    $ process = subprocess.Popen([python_path, py_path, quiz_title], creationflags=subprocess.CREATE_NO_WINDOW)
+
+    screen terminate_process:
+        imagebutton auto "images/Minigames Menu/exit_%s.png" action [Hide("terminate_process"), Function(terminate, process)]:
+            xalign 0.86
+            yalign 0.04
+
+    show screen terminate_process
+
+    #Check if the subprocess has finished
+    while not is_subprocess_finished(process):
+        show screen processing
+        pause 0.1
+
+    screen processing:
+        text "Processing document...":
+            font "Copperplate Gothic Thirty-Three Regular.otf"
+            size 60
+            color "#FFFFFF"
+            xalign 0.5
+            yalign 0.5
+
+    hide screen processing
+
+    hide halfblack
+    $ hide_s("create_quiz_dull")
+    call screen create_quiz
 
 screen standard_quizzes():
     $ hide_s("question_dull")
@@ -330,7 +499,7 @@ label init_quiz:
             xalign 0.5
             yalign 0.48
 
-        timer 1.0 action [Hide("go"), Call("quiz_proper")]
+        timer 1.0 action [Hide("go"), Show("quiz_proper"), Show("countdown")]
 
     call screen ready with dissolve
 
@@ -339,81 +508,84 @@ style init_quiz_font:
     size 87
     color "#FFFFFF"
 
-label quiz_proper:
-    $ timer_range = 12
-    $ timer_jump = 'wrong'
-
-    show screen countdown
-    call screen question
-
-    screen countdown:
-        timer 0.01 repeat True action If(time > 0, true=SetVariable('time', time - 0.01), false=[Hide('countdown'), Jump(timer_jump)])
-        $ current_time = int(time)
-        image "images/Minigames Menu/timer/[current_time].png" xalign 0.85 yalign 0.85
-
-    screen question():
-        modal True
-        $ show_s("question_dull")
-        imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("question"), Hide("countdown"), Show("paused_menu")]: #action pending
-            xalign 0.86
-            yalign 0.04
-
-        frame:
+screen countdown():
+    if timeout_label is not None:
+        bar:
             xalign 0.5
-            yalign 0.15
-            xsize 1241
-            ysize 163
-            background "#D9D9D9"
+            yalign 0.85
+            xsize 740
+            value AnimatedValue(old_value=1.0, value=0.0, range=1.0, delay=timeout)
+        timer timeout action [SetVariable("timeout", 10), SetVariable("timeout_label", None), Jump(timeout_label)]
+## When this is true, menu captions will be spoken by the narrator. When false,
+## menu captions will be displayed as empty buttons.
+define config.narrator_menu = True
+"""
+screen countdown:
+    timer 0.01 repeat True action If(time > 0, true=SetVariable('time', time - 0.01), false=[Hide('countdown'), Jump(timer_jump)])
+    $ current_time = int(time)
+    image "images/Minigames Menu/timer/[current_time].png" xalign 0.85 yalign 0.85
+    """
 
-            $ number = question_num + 1
+screen quiz_proper:
+    tag menu
+    $ timeout = time # Sets how long in seconds the user has to make a choice
+    $ timeout_label = 'wrong' #sets the label that is automatically jumped to if the user makes no choice
 
-            text "[number]. " + questions[question_num]:
-                font "Copperplate Gothic Bold Regular.ttf"
-                xalign 0.5
-                yalign 0.5
+    imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("quiz_proper"), Hide("countdown"), Show("paused_menu")]: #action pending
+        xalign 0.86
+        yalign 0.04
 
-        style_prefix "mytext"
+    frame:
+        xalign 0.5
+        yalign 0.15
+        xsize 1241
+        ysize 163
+        background "#D9D9D9"
 
-        imagebutton auto "images/Button/choice_%s.png" action If(answers[question_num] == 'A', Jump("right"), Jump("wrong")):
-            yalign 0.39
+        $ number = question_num + 1
+
+        text "[number]. " + questions[question_num]:
+            font "Copperplate Gothic Bold Regular.ttf"
             xalign 0.5
-
-        textbutton "A. " + options[question_num][0]:
-            action If(answers[question_num] == 'A', Jump("right"), Jump("wrong"))
-
-            yalign 0.4
-            xalign 0.5
-
-        imagebutton auto "images/Button/choice_%s.png" action If(answers[question_num] == 'B', Jump("right"), Jump("wrong")):
             yalign 0.5
-            xalign 0.5
 
-        textbutton "B. " + options[question_num][1]:
-            action If(answers[question_num] == 'B', Jump("right"), Jump("wrong"))
+    style_prefix "mytext"
 
-            yalign 0.5
-            xalign 0.5
+    imagebutton auto "images/Button/choice_%s.png" action If(answers[question_num] == 'A', Jump("right"), Jump("wrong")):
+        yalign 0.39
+        xalign 0.5
 
-        imagebutton auto "images/Button/choice_%s.png" action If(answers[question_num] == 'C', Jump("right"), Jump("wrong")):
-            yalign 0.612
-            xalign 0.5
+    text "A. " + options[question_num][0]:
+        font "Copperplate Gothic Thirty-Three Regular.otf"
+        yalign 0.4
+        xalign 0.5
 
-        textbutton "C. " + options[question_num][2]:
-            action If(answers[question_num] == 'C', Jump("right"), Jump("wrong"))
+    imagebutton auto "images/Button/choice_%s.png" action If(answers[question_num] == 'B', Jump("right"), Jump("wrong")):
+        yalign 0.5
+        xalign 0.5
 
-            yalign 0.6
-            xalign 0.5
+    text "B. " + options[question_num][1]:
+        font "Copperplate Gothic Thirty-Three Regular.otf"
+        yalign 0.5
+        xalign 0.5
 
-        imagebutton auto "images/Button/choice_%s.png" action If(answers[question_num] == 'D', Jump("right"), Jump("wrong")):
-            yalign 0.712
-            xalign 0.5
+    imagebutton auto "images/Button/choice_%s.png" action If(answers[question_num] == 'C', Jump("right"), Jump("wrong")):
+        yalign 0.612
+        xalign 0.5
 
-        textbutton "D. " + options[question_num][3]:
-            action If(answers[question_num] == 'D', Jump("right"), Jump("wrong"))
+    text "C. " + options[question_num][2]:
+        font "Copperplate Gothic Thirty-Three Regular.otf"
+        yalign 0.6
+        xalign 0.5
 
-            yalign 0.7
-            xalign 0.5
+    imagebutton auto "images/Button/choice_%s.png" action If(answers[question_num] == 'D', Jump("right"), Jump("wrong")):
+        yalign 0.712
+        xalign 0.5
 
+    text "D. " + options[question_num][3]:
+        font "Copperplate Gothic Thirty-Three Regular.otf"
+        yalign 0.7
+        xalign 0.5
 
 style mytext_button_text:
     background None
@@ -427,11 +599,13 @@ style mytext_button_text:
     size 23
 
 screen paused_menu():
+    modal True
     $ paused_time = int(time)
+    $ show_s("question_dull")
     image "images/Minigames Menu/timer/[paused_time].png" xalign 0.85 yalign 0.85
     add "halfblack"
 
-    imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("paused_menu"), Jump("quiz_proper")]:
+    imagebutton auto "images/Button/pause_quiz_%s.png" action [Hide("paused_menu"), ShowMenu("quiz_proper")]:
         xalign 0.86
         yalign 0.04
     frame:
@@ -444,24 +618,19 @@ screen paused_menu():
         vbox:
             xalign 0.5
             yalign 0.5
-            imagebutton auto "images/Button/continue_quiz_%s.png" action [Hide("paused_menu"), Jump("quiz_proper")]:
+            imagebutton auto "images/Button/continue_quiz_%s.png" action [Hide("paused_menu"), Hide("question_dull"), ShowMenu("quiz_proper"), Show("countdown")]:
                 xalign 0.5
                 yalign 0.5
-            imagebutton auto "images/Button/exit_quiz_%s.png" action [Hide("paused_menu"), Hide("question"), ShowMenu("standard_quizzes")]:
+            imagebutton auto "images/Button/exit_quiz_%s.png" action [Hide("paused_menu"), Hide("question_dull"), ShowMenu("standard_quizzes")]:
                 xalign 0.5
                 yalign 0.5
                 yoffset 20
 
-
-screen paused:
-    image "images/Minigames Menu/timer/[paused_time].png" xalign 0.85 yalign 0.85
-
 label right:
-    pause 0.5
-    hide screen countdown
-    $ paused_time = int(time)
-    show screen paused
+    hide screen quiz_proper
     $ show_s("question_dull")
+    hide screen countdown
+    pause 0.5
     show halfblack
     show mc happy_uniform at left
 
@@ -472,14 +641,14 @@ label right:
     hide mc
     hide halfblack
     hide screen paused
+    show screen countdown
     jump next_question
 
 label wrong:
-    pause 0.5
-    hide screen countdown
-    show screen paused
-    $ paused_time = int(time)
+    hide screen quiz_proper
     $ show_s("question_dull")
+    hide screen countdown
+    pause 0.5
     show halfblack
     show mc sad_uniform at left
 
@@ -492,6 +661,7 @@ label wrong:
     hide mc
     hide halfblack
     hide screen paused
+    show screen countdown
     jump next_question
 
 label next_question:
@@ -501,8 +671,7 @@ label next_question:
         $ question_num = 0
         jump results
 
-    $ time = 12
-    jump quiz_proper
+    call screen quiz_proper
 
 label results:
     hide screen countdown
@@ -517,11 +686,11 @@ label results:
             A = (L*S) / ((L*S) + (1-L)*(1-G))
             L = A + (1-A)*T
 
-    $ quiz_record[current_quiz]['records'].append(score)
+    $ quiz_record['standard'][current_quiz]['records'].append(score)
     #reset
     $ score = 0
     $ mastery = round(L * 100, 2)
-    $ quiz_record[current_quiz]['mastery'].append(mastery)
+    $ quiz_record['standard'][current_quiz]['mastery'].append(mastery)
 
     $ save_quiz_record()
 
@@ -532,12 +701,12 @@ screen quiz_status:
     add "bg quiz main"
 
     python:
-        if len(quiz_record[current_quiz]['mastery']) == 0:
+        if len(quiz_record['standard'][current_quiz]['mastery']) == 0:
             mastery = 0
         else:
-            mastery = quiz_record[current_quiz]['mastery'][-1]
+            mastery = quiz_record['standard'][current_quiz]['mastery'][-1]
 
-    imagebutton auto "images/Minigames Menu/exit_%s.png" action ShowMenu("standard_quizzes"): #don't know yet
+    imagebutton auto "images/Minigames Menu/exit_%s.png" action [Hide("quiz_status"), ShowMenu("standard_quizzes")]: #don't know yet
         xalign 0.86
         yalign 0.04
 
@@ -601,18 +770,25 @@ screen scoreboard:
 
         vbox:
             spacing 10
-            text "SCORE               MASTERY       " style "status_style"
 
-            for i in range(len(quiz_record[current_quiz]['records'])):
-                $ score = quiz_record[current_quiz]['records'][i]
-                $ mastery = quiz_record[current_quiz]['mastery'][i]
-                text "      [score]                       [mastery]%        " style "status_style"
+            if len(quiz_record['standard'][current_quiz]['records']) == 0:
+                text "No records found.":
+                    font "Copperplate Gothic Thirty-Three Regular.otf"
+                    size 40
+                    color "#FFFFFF"
+            else:
+                text "SCORE               MASTERY       " style "status_style"
+
+                for i in range(len(quiz_record['standard'][current_quiz]['records'])):
+                    $ score = quiz_record['standard'][current_quiz]['records'][i]
+                    $ mastery = quiz_record['standard'][current_quiz]['mastery'][i]
+                    text "      [score]                       [mastery]%        " style "status_style"
 
     python:
-        if len(quiz_record[current_quiz]['mastery']) == 0:
+        if len(quiz_record['standard'][current_quiz]['mastery']) == 0:
             mastery = 0
         else:
-            mastery = quiz_record[current_quiz]['mastery'][-1]
+            mastery = quiz_record['standard'][current_quiz]['mastery'][-1]
 
     text "[mastery]%" style "status_style":
         xalign 0.5
@@ -627,6 +803,67 @@ style status_style:
     font "Copperplate Gothic Bold Regular.ttf"
     size 30
     color "#FFFFFF"
+
+screen create_quiz_dull:
+    add "bg quiz main"
+
+    imagebutton auto "images/Minigames Menu/exit_%s.png":
+        xalign 0.86
+        yalign 0.04
+
+    text "Notes":
+            font "Copperplate Gothic Thirty-Three Regular.otf"
+            size 48
+            color "#FFFFFF"
+            xalign 0.324
+            yalign 0.15
+
+    frame:
+        xalign 0.25
+        yalign 0.5
+        xpadding 40
+        ypadding 40
+        xsize 600
+        ysize 600
+        background "#D9D9D9"
+
+    vbox:
+        xalign 0.738
+        yalign 0.4
+
+        text "Keywords":
+                font "Copperplate Gothic Thirty-Three Regular.otf"
+                size 48
+                color "#FFFFFF"
+                xalign 0.5
+                yalign 0.5
+
+        frame:
+            xalign 0.25
+            yalign 0.5
+            xpadding 40
+            ypadding 40
+            xsize 400
+            ysize 400
+            background "#D9D9D9"
+            yoffset 30
+
+
+    hbox:
+        xalign 0.690
+        yalign 0.15
+
+        text "[quiz_title]": #specify with a number later
+                font "Copperplate Gothic Thirty-Three Regular.otf"
+                size 60
+                color "#FFFFFF"
+
+        imagebutton auto "images/Button/edit_title_%s.png": #action [Hide("standard_quizzes"), ShowMenu("program_quiz_protocol")]:
+            xoffset 40
+
+    imagebutton auto "images/Button/upload_%s.png": #action [Hide("standard_quizzes"), ShowMenu("program_quiz_protocol")]:
+        xalign 0.75
+        yalign 0.8
 
 screen question_dull:
     imagebutton auto "images/Button/pause_quiz_%s.png":
@@ -653,7 +890,8 @@ screen question_dull:
         yalign 0.39
         xalign 0.5
 
-    textbutton "A. " + options[question_num][0]:
+    text "A. " + options[question_num][0]:
+        font "Copperplate Gothic Thirty-Three Regular.otf"
         yalign 0.4
         xalign 0.5
 
@@ -661,7 +899,8 @@ screen question_dull:
         yalign 0.5
         xalign 0.5
 
-    textbutton "B. " + options[question_num][1]:
+    text "B. " + options[question_num][1]:
+        font "Copperplate Gothic Thirty-Three Regular.otf"
         yalign 0.5
         xalign 0.5
 
@@ -669,7 +908,8 @@ screen question_dull:
         yalign 0.612
         xalign 0.5
 
-    textbutton "C. " + options[question_num][2]:
+    text "C. " + options[question_num][2]:
+        font "Copperplate Gothic Thirty-Three Regular.otf"
         yalign 0.6
         xalign 0.5
 
@@ -677,6 +917,7 @@ screen question_dull:
         yalign 0.712
         xalign 0.5
 
-    textbutton "D. " + options[question_num][3]:
+    text "D. " + options[question_num][3]:
+        font "Copperplate Gothic Thirty-Three Regular.otf"
         yalign 0.7
         xalign 0.5
