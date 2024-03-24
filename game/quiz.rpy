@@ -5,6 +5,7 @@ things to fix:
     3. fix assets
     4. add toolkits
     5. add comments
+    6. if possible, add mini text editor
 """
 
 init:
@@ -40,6 +41,18 @@ init python:
 
     base_path = os.getcwd()
 
+    def get_text(quiz_notes):
+        file_path = get_path(f"kodigo/game/python/docs/{quiz_notes}.txt")
+        with open(file_path, 'r') as file:
+            # Read the entire file contents into a string
+            texts = file.read()
+
+        return texts
+
+    def set_bool(b):
+        global bool
+        bool = b
+
     def terminate(process):
         process.terminate()
 
@@ -73,8 +86,8 @@ init python:
         global quiz_type
         quiz_type  = type
 
-    def get_notes():
-        file_path = get_path(f"kodigo/game/python/docs/{current_quiz}.txt")
+    def get_notes(quiz_notes):
+        file_path = get_path(f"kodigo/game/python/docs/{quiz_notes}.txt")
         with open(file_path, 'r') as file:
             notes = file.readlines()
         return notes
@@ -239,28 +252,47 @@ screen create_quiz:
     tag menu
     add "bg quiz main"
 
-    imagebutton auto "images/Minigames Menu/exit_%s.png" action [Hide("create_quiz"), ShowMenu("custom_quizzes")]:
+    imagebutton auto "images/Minigames Menu/exit_%s.png" action [Hide("create_quiz"), Jump("upload_warning")]:
         xalign 0.86
         yalign 0.04
 
+    $ file_path = get_path(f"kodigo/game/python/docs/{quiz_title}.txt")
+
+    if os.path.exists(file_path):
+        $ notes = get_notes(quiz_title)
+
     text "Notes":
-            font "Copperplate Gothic Thirty-Three Regular.otf"
-            size 48
-            color "#FFFFFF"
-            xalign 0.324
-            yalign 0.15
+        font "Copperplate Gothic Thirty-Three Regular.otf"
+        size 48
+        color "#FFFFFF"
+        xalign 0.324
+        yalign 0.15
 
     frame:
         xalign 0.25
         yalign 0.5
-        xpadding 40
-        ypadding 40
         xsize 600
         ysize 600
         background "#D9D9D9"
 
+        if os.path.exists(file_path):
+            vpgrid:
+                cols 1
+                scrollbars "vertical"
+                spacing 5
+                mousewheel True
+
+                vbox:
+                    for note in notes:
+                        text note style "notes_style"
+
+    if os.path.exists(file_path):
+        imagebutton auto "images/Button/summarize_%s.png" action Jump("summarize"):
+            xalign 0.28
+            yalign 0.85
+
     vbox:
-        xalign 0.738
+        xalign 0.737
         yalign 0.4
 
         text "Keywords":
@@ -285,16 +317,85 @@ screen create_quiz:
         yalign 0.15
 
         text "[quiz_title]": #specify with a number later
-                font "Copperplate Gothic Thirty-Three Regular.otf"
-                size 60
-                color "#FFFFFF"
+            font "Copperplate Gothic Thirty-Three Regular.otf"
+            size 60
+            color "#FFFFFF"
 
         imagebutton auto "images/Button/edit_title_%s.png" action Jump("edit_title"):
             xoffset 40
 
-    imagebutton auto "images/Button/upload_%s.png" action Jump("upload_file"):
-        xalign 0.75
-        yalign 0.8
+    if not os.path.exists(file_path):
+        imagebutton auto "images/Button/upload_%s.png" action Jump("upload_file"):
+            xalign 0.75
+            yalign 0.8
+    else:
+        imagebutton auto "images/Button/upload_%s.png": #no action
+            xalign 0.75
+            yalign 0.8
+
+label upload_warning:
+    #check if quiz_file of the same name don't exist yet then give warning
+    # meaning the quiz isn't done yet
+    $ file_path = f"kodigo/game/python/quizzes/{quiz_title}.json"
+
+    if not os.path.exists(file_path):
+        $ show_s("create_quiz_dull")
+        show halfblack
+        call screen warning
+
+    screen warning:
+        frame:
+            xalign 0.5
+            yalign 0.5
+            xpadding 40
+            ypadding 40
+            xsize 450
+            ysize 420
+            background "#D9D9D9"
+
+            vbox:
+                xalign 0.5
+                yalign 0.5
+
+                text f"'{quiz_title}' is not yet created.":
+                    font "Copperplate Gothic Thirty-Three Regular.otf"
+                    size 50
+                    color "#303031"
+                    xalign 0.5
+                    yalign 0.5
+                text "Would you like to exit?":
+                    font "Copperplate Gothic Thirty-Three Regular.otf"
+                    size 30
+                    color "#303031"
+                    yoffset 10
+
+                hbox:
+                    xalign 0.5
+                    yalign 0.5
+                    yoffset 50
+                    spacing 40
+
+                    imagebutton auto "images/Button/yes_%s.png" action [Hide("warning"), Function(set_bool, True), Jump("warning_2")]
+                    imagebutton auto "images/Button/no_%s.png" action [Hide("warning"), Function(set_bool, False), Jump("warning_2")]
+
+    call screen custom_quizzes
+
+label warning_2:
+    $ hide_s("create_quiz_dull")
+    hide halfblack
+
+    #if player wants to exit
+    if bool:
+        $ file_path = f"kodigo/game/python/docs/{quiz_title}.txt"
+
+        if os.path.exists(file_path):
+            $ os.remove(file_path) # remove notes
+
+        $ quiz_title = "Quiz" #reset
+
+        call screen custom_quizzes with dissolve
+    else:
+        call screen create_quiz
 
 label edit_title:
     $ show_s("create_quiz_dull")
@@ -302,13 +403,40 @@ label edit_title:
 
     python:
         old_file_path = get_path(f"kodigo/game/python/docs/{quiz_title}.txt")
-        quiz_title = renpy.input("Quiz name:", length=32)
-        quiz_title = quiz_title.strip()
-        new_file_path = get_path(f"kodigo/game/python/docs/{quiz_title}.txt")
+        temp = renpy.input("Quiz name:", length=17)
+        temp = temp.strip()
+        new_file_path = get_path(f"kodigo/game/python/docs/{temp}.txt")
 
-        if os.path.exists(old_file_path):
-            os.rename(old_file_path, new_file_path)
+    screen duplicate:
+        vbox:
+            xalign 0.5
+            yalign 0.5
+            xsize 1000
+            ysize 100
+            spacing 5
+            text "Can't have multiple quizzes with the same name.":
+                font "Copperplate Gothic Thirty-Three Regular.otf"
+                size 60
+                color "#999999"
+                xalign 0.5
+                yalign 0.5
+            text "Try again.":
+                font "Copperplate Gothic Thirty-Three Regular.otf"
+                size 60
+                color "#999999"
+                xalign 0.5
+                yalign 0.5
 
+    if os.path.exists(new_file_path):
+        show screen duplicate
+        pause 2.0
+        hide screen duplicate
+        $ hide_s("create_quiz_dull")
+        call screen create_quiz
+    elif os.path.exists(old_file_path):
+        $ os.rename(old_file_path, new_file_path)
+
+    $ quiz_title = temp
     $ hide_s("create_quiz_dull")
     call screen create_quiz
 
@@ -342,6 +470,41 @@ label upload_file:
 
     hide screen processing
 
+    hide halfblack
+    $ hide_s("create_quiz_dull")
+    call screen create_quiz
+
+label summarize:
+    $ show_s("create_quiz_dull")
+    show halfblack
+    hide screen create_quiz
+
+    $ notes = get_text(quiz_title)
+    $ python_path = get_path(f"kodigo/game/python/python.exe")
+    $ py_path = get_path(f"kodigo/game/python/summarize.py")
+    $ process = subprocess.Popen([python_path, py_path, quiz_title, notes], creationflags=subprocess.CREATE_NO_WINDOW)
+
+    screen terminate_process:
+        imagebutton auto "images/Minigames Menu/exit_%s.png" action [Hide("terminate_process"), Function(terminate, process)]:
+            xalign 0.86
+            yalign 0.04
+
+    show screen terminate_process
+
+    #Check if the subprocess has finished
+    while not is_subprocess_finished(process):
+        show screen summarizing
+        pause 0.1
+
+    screen summarizing:
+        text "Summarizing...":
+            font "Copperplate Gothic Thirty-Three Regular.otf"
+            size 60
+            color "#FFFFFF"
+            xalign 0.5
+            yalign 0.5
+
+    hide screen summarizing
     hide halfblack
     $ hide_s("create_quiz_dull")
     call screen create_quiz
@@ -390,7 +553,7 @@ screen standard_quizzes():
 screen display_notes():
     add "bg quiz main"
 
-    $ notes = get_notes()
+    $ notes = get_notes(current_quiz)
 
     imagebutton auto "images/Minigames Menu/exit_%s.png" action [Hide("display_notes"), ShowMenu("standard_quizzes")]:
         xalign 0.86
@@ -811,6 +974,11 @@ screen create_quiz_dull:
         xalign 0.86
         yalign 0.04
 
+    $ file_path = get_path(f"kodigo/game/python/docs/{quiz_title}.txt")
+
+    if os.path.exists(file_path):
+        $ notes = get_notes(quiz_title)
+
     text "Notes":
             font "Copperplate Gothic Thirty-Three Regular.otf"
             size 48
@@ -821,11 +989,24 @@ screen create_quiz_dull:
     frame:
         xalign 0.25
         yalign 0.5
-        xpadding 40
-        ypadding 40
         xsize 600
         ysize 600
         background "#D9D9D9"
+
+        if os.path.exists(file_path):
+            vpgrid:
+                cols 1
+                scrollbars "vertical"
+                spacing 5
+
+                vbox:
+                    for note in notes:
+                        text note style "notes_style"
+
+    if os.path.exists(file_path):
+        imagebutton auto "images/Button/summarize_%s.png":
+            xalign 0.28
+            yalign 0.85
 
     vbox:
         xalign 0.738

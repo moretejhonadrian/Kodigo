@@ -15,7 +15,6 @@ if os.path.splitext(fn)[1] == ".txt":
     with open(fn, "r", encoding='utf-8') as file:
         # Read the contents of the file
         text = file.read()
-        print(text)
 
 #THIS WORKS.
 
@@ -27,7 +26,10 @@ text = clean_text(text)
 #print(repr(text))
 
 filename = sys.argv[1]
-fp = f"D:\\renpy-8.1.3-sdk\\kodigo\\game\\python\\docs\\{filename}.txt"
+
+base_path = os.getcwd()
+relative_path = f"kodigo\\game\\python\\docs\\{filename}.txt"
+fp = os.path.join(base_path, relative_path)
 
 with open(fp, "w") as file:
     file.write(text)
