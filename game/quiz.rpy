@@ -213,7 +213,6 @@ screen program_quiz_protocol():
         yalign 0.7
         xalign 0.5
 
-
     #$ process = subprocess.Popen(["D:/renpy-8.1.3-sdk/kodigo/game/python/python.exe", "D:/renpy-8.1.3-sdk/kodigo/game/python/MCQ.py"]) #this works
     #, creationflags=subprocess.CREATE_NO_WINDOW
 
@@ -290,6 +289,18 @@ screen create_quiz:
         imagebutton auto "images/Button/summarize_%s.png" action Jump("summarize"):
             xalign 0.28
             yalign 0.85
+
+        vbox:
+            xalign 0.9
+            yalign 0.4
+            imagebutton auto "images/Button/add_%s.png":# action Jump("summarize"):
+                xalign 0.28
+                yalign 0.85
+
+            imagebutton auto "images/Button/auto_%s.png":# action Jump("summarize"):
+                xalign 0.28
+                yalign 0.85
+            #jump get_keywords
 
     vbox:
         xalign 0.737
@@ -444,7 +455,7 @@ label upload_file:
     $ show_s("create_quiz_dull")
     show halfblack
     hide screen create_quiz
-    $ python_path = get_path(f"kodigo/game/python/python.exe")
+    $ python_path = get_path(f"kodigo/game/python/Python311/python.exe") #"C:/Users/Adrian/AppData/Local/Programs/Python/Python311/python.exe"
     $ py_path = get_path(f"kodigo/game/python/upload_file.py")
     $ process = subprocess.Popen([python_path, py_path, quiz_title], creationflags=subprocess.CREATE_NO_WINDOW)
 
@@ -480,7 +491,7 @@ label summarize:
     hide screen create_quiz
 
     $ notes = get_text(quiz_title)
-    $ python_path = get_path(f"kodigo/game/python/python.exe")
+    $ python_path = get_path(f"kodigo/game/python/Python311/python.exe") #"C:/Users/Adrian/AppData/Local/Programs/Python/Python311/python.exe"
     $ py_path = get_path(f"kodigo/game/python/summarize.py")
     $ process = subprocess.Popen([python_path, py_path, quiz_title, notes], creationflags=subprocess.CREATE_NO_WINDOW)
 
@@ -503,6 +514,21 @@ label summarize:
             color "#FFFFFF"
             xalign 0.5
             yalign 0.5
+
+    hide screen summarizing
+    hide halfblack
+    $ hide_s("create_quiz_dull")
+    call screen create_quiz
+
+#after the player uploads a document, follow it with this, dk if in background though
+label get_keywords:
+    $ show_s("create_quiz_dull")
+    show halfblack
+    hide screen create_quiz
+
+    #processes heree....
+
+    "pause"
 
     hide screen summarizing
     hide halfblack
