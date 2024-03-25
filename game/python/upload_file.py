@@ -16,20 +16,14 @@ if os.path.splitext(fn)[1] == ".txt":
         # Read the contents of the file
         text = file.read()
 
-#THIS WORKS.
-
-#MAYBE WHAT WE DO IS HAVE A PYTHON CODE IN RENPY THAT BASICALLY CALLS A SUBPROCESS THAT MAKE'S USE OF MCQ_UTILS SO WE CAN OUTPUT THAT TO THE USER, EACH PART.
-
-#preprocessing
-
 text = clean_text(text)
-#print(repr(text))
 
 filename = sys.argv[1]
 
 base_path = os.getcwd()
 relative_path = f"kodigo\\game\\python\\docs\\{filename}.txt"
-fp = os.path.join(base_path, relative_path)
+fp = os.path.join(base_path, relative_path) #f"D:\\renpy-8.1.3-sdk\\kodigo\\game\\python\\docs\\{filename}.txt" 
 
 with open(fp, "w") as file:
     file.write(text)
+

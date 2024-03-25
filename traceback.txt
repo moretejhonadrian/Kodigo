@@ -1,28 +1,26 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/quiz.rpy", line 460, in script
-    $ process = subprocess.Popen([python_path, py_path, quiz_title], creationflags=subprocess.CREATE_NO_WINDOW)
-  File "game/quiz.rpy", line 460, in <module>
-    $ process = subprocess.Popen([python_path, py_path, quiz_title], creationflags=subprocess.CREATE_NO_WINDOW)
-FileNotFoundError: [WinError 2] The system cannot find the file specified
+  File "game/quiz.rpy", line 464, in script
+    $ os.rename(old_file_path_json, new_file_path_json)
+  File "game/quiz.rpy", line 464, in <module>
+    $ os.rename(old_file_path_json, new_file_path_json)
+FileNotFoundError: [WinError 2] The system cannot find the file specified: 'D:\\renpy-8.1.3-sdk\\kodigo/game/python/docs/Quiz.json' -> 'D:\\renpy-8.1.3-sdk\\kodigo/game/python/docs/quiz 1.json'
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/quiz.rpy", line 460, in script
-    $ process = subprocess.Popen([python_path, py_path, quiz_title], creationflags=subprocess.CREATE_NO_WINDOW)
+  File "game/quiz.rpy", line 464, in script
+    $ os.rename(old_file_path_json, new_file_path_json)
   File "D:\renpy-8.1.3-sdk\renpy\ast.py", line 1138, in execute
     renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
   File "D:\renpy-8.1.3-sdk\renpy\python.py", line 1122, in py_exec_bytecode
     exec(bytecode, globals, locals)
-  File "game/quiz.rpy", line 460, in <module>
-    $ process = subprocess.Popen([python_path, py_path, quiz_title], creationflags=subprocess.CREATE_NO_WINDOW)
-  File "/home/tom/ab/renpy-build-fix/tmp/install.linux-x86_64/lib/python3.9/subprocess.py", line 951, in __init__
-  File "/home/tom/ab/renpy-build-fix/tmp/install.linux-x86_64/lib/python3.9/subprocess.py", line 1420, in _execute_child
-FileNotFoundError: [WinError 2] The system cannot find the file specified
+  File "game/quiz.rpy", line 464, in <module>
+    $ os.rename(old_file_path_json, new_file_path_json)
+FileNotFoundError: [WinError 2] The system cannot find the file specified: 'D:\\renpy-8.1.3-sdk\\kodigo/game/python/docs/Quiz.json' -> 'D:\\renpy-8.1.3-sdk\\kodigo/game/python/docs/quiz 1.json'
 
 Windows-10-10.0.22621 AMD64
 Ren'Py 8.1.3.23091805
 Kodigo 1.0
-Mon Mar 25 11:08:01 2024
+Mon Mar 25 15:47:23 2024

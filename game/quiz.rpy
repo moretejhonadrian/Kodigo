@@ -8,6 +8,8 @@ things to fix:
     6. if possible, add mini text editor
 """
 
+#GETSENTSLEN
+
 init:
     $ question_num = 0
     $ score = 0
@@ -40,6 +42,13 @@ init python:
     import os
 
     base_path = os.getcwd()
+
+    def get_sents_len(quiz_title):
+        file_path = get_path(f"kodigo/game/python/quizzes/q_records.json")
+
+        with open(file_path, 'r') as file:
+            quiz_record = json.load(file)
+        return notes
 
     def get_text(quiz_notes):
         file_path = get_path(f"kodigo/game/python/docs/{quiz_notes}.txt")
@@ -284,6 +293,12 @@ screen create_quiz:
                 vbox:
                     for note in notes:
                         text note style "notes_style"
+        else:
+            ypadding 40
+            xpadding 40
+            text "Texts from the document will appear here." style "notes_style":
+                xalign 0.5
+                yalign 0.5
 
     if os.path.exists(file_path):
         imagebutton auto "images/Button/summarize_%s.png" action Jump("summarize"):
@@ -291,8 +306,9 @@ screen create_quiz:
             yalign 0.85
 
         vbox:
-            xalign 0.9
-            yalign 0.4
+            xalign 0.85
+            yalign 0.5
+            spacing 5
             imagebutton auto "images/Button/add_%s.png":# action Jump("summarize"):
                 xalign 0.28
                 yalign 0.85
@@ -307,21 +323,27 @@ screen create_quiz:
         yalign 0.4
 
         text "Keywords":
-                font "Copperplate Gothic Thirty-Three Regular.otf"
-                size 48
-                color "#FFFFFF"
-                xalign 0.5
-                yalign 0.5
+            font "Copperplate Gothic Thirty-Three Regular.otf"
+            size 48
+            color "#FFFFFF"
+            xalign 0.5
+            yalign 0.5
 
         frame:
             xalign 0.25
             yalign 0.5
-            xpadding 40
-            ypadding 40
             xsize 400
             ysize 400
             background "#D9D9D9"
             yoffset 30
+
+            if not os.path.exists(file_path):
+            #else:
+                ypadding 40
+                xpadding 40
+                text "Keywords from the text will appear here." style "notes_style":
+                    xalign 0.5
+                    yalign 0.5
 
     hbox:
         xalign 0.690
@@ -398,9 +420,11 @@ label warning_2:
     #if player wants to exit
     if bool:
         $ file_path = f"kodigo/game/python/docs/{quiz_title}.txt"
+        $ file_path_json = f"kodigo/game/python/docs/{quiz_title}.json"
 
         if os.path.exists(file_path):
             $ os.remove(file_path) # remove notes
+            $ os.remove(file_path_json)
 
         $ quiz_title = "Quiz" #reset
 
@@ -414,9 +438,11 @@ label edit_title:
 
     python:
         old_file_path = get_path(f"kodigo/game/python/docs/{quiz_title}.txt")
+        old_file_path_json = get_path(f"kodigo/game/python/docs/{quiz_title}.json")
         temp = renpy.input("Quiz name:", length=17)
         temp = temp.strip()
         new_file_path = get_path(f"kodigo/game/python/docs/{temp}.txt")
+        new_file_path_json = get_path(f"kodigo/game/python/docs/{temp}.json")
 
     screen duplicate:
         vbox:
@@ -446,6 +472,7 @@ label edit_title:
         call screen create_quiz
     elif os.path.exists(old_file_path):
         $ os.rename(old_file_path, new_file_path)
+        $ os.rename(old_file_path_json, new_file_path_json)
 
     $ quiz_title = temp
     $ hide_s("create_quiz_dull")
@@ -480,6 +507,27 @@ label upload_file:
             yalign 0.5
 
     hide screen processing
+
+    $ notes = get_text(quiz_title)
+    $ py_path = get_path(f"kodigo/game/python/get_sentences.py")
+    $ process = subprocess.Popen([python_path, py_path, quiz_title, notes], creationflags=subprocess.CREATE_NO_WINDOW)
+
+    #might need to store this somewhere else for code minimization
+    while not is_subprocess_finished(process):
+        show screen extract_sent
+        pause 0.1
+
+    screen extract_sent:
+        text "Extracting sentences...":
+            font "Copperplate Gothic Thirty-Three Regular.otf"
+            size 60
+            color "#FFFFFF"
+            xalign 0.5
+            yalign 0.5
+
+    #maybe we should let the user know how many sentences there is
+
+    hide screen extract_sent
 
     hide halfblack
     $ hide_s("create_quiz_dull")
@@ -521,12 +569,22 @@ label summarize:
     call screen create_quiz
 
 #after the player uploads a document, follow it with this, dk if in background though
+#in this, first get the number of sentences to get the estimate number of keywords to find
+#then run subprocess
+#can't be in the background because wtf would the user do?
+
 label get_keywords:
     $ show_s("create_quiz_dull")
     show halfblack
     hide screen create_quiz
 
-    #processes heree....
+    $ notes = get_text(quiz_title)
+    #$ n =
+    $ python_path = get_path(f"kodigo/game/python/Python311/python.exe") #this could be global
+    $ py_path = get_path(f"kodigo/game/python/keywords.py")
+    $ process = subprocess.Popen([python_path, py_path, quiz_title], creationflags=subprocess.CREATE_NO_WINDOW)
+
+    #process = subprocess.Popen([python_path, py_path, notes, n])#, creationflags=subprocess.CREATE_NO_WINDOW)
 
     "pause"
 
@@ -1028,6 +1086,29 @@ screen create_quiz_dull:
                 vbox:
                     for note in notes:
                         text note style "notes_style"
+        else:
+            ypadding 40
+            xpadding 40
+            text "Texts from the document will appear here." style "notes_style":
+                xalign 0.5
+                yalign 0.5
+
+    if os.path.exists(file_path):
+        imagebutton auto "images/Button/summarize_%s.png" action Jump("summarize"):
+            xalign 0.28
+            yalign 0.85
+
+        vbox:
+            xalign 0.85
+            yalign 0.5
+            spacing 5
+            imagebutton auto "images/Button/add_%s.png":
+                xalign 0.28
+                yalign 0.85
+
+            imagebutton auto "images/Button/auto_%s.png":
+                xalign 0.28
+                yalign 0.85
 
     if os.path.exists(file_path):
         imagebutton auto "images/Button/summarize_%s.png":
@@ -1054,6 +1135,20 @@ screen create_quiz_dull:
             ysize 400
             background "#D9D9D9"
             yoffset 30
+
+            if not os.path.exists(file_path):
+                #$ python_path = get_path(f"kodigo/game/python/Python311/python.exe")
+                #$ py_path = get_path(f"kodigo/game/python/upload_file.py")
+                #$ process = subprocess.Popen([python_path, py_path, quiz_title], creationflags=subprocess.CREATE_NO_WINDOW)
+
+                #process = subprocess.Popen([python_path, py_path, notes, n])#, creationflags=subprocess.CREATE_NO_WINDOW)
+            #else:
+                ypadding 40
+                xpadding 40
+                text "Keywords from the text will appear here." style "notes_style":
+                    xalign 0.5
+                    yalign 0.5
+
 
 
     hbox:
