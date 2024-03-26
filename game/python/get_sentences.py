@@ -1,4 +1,3 @@
-#don't know if I should separate this
 import spacy
 import json
 import sys
