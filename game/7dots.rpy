@@ -1,4 +1,4 @@
-# чтобы str() не вылетала на линуксе
+# чтобы str() не вылетала на линуксеdddddddddddddddddddddddd
 define mystr = eval("lambda i: '%s' % i")
 
 init -2000 python:
